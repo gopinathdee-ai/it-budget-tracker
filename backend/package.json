@@ -1,0 +1,31 @@
+{
+  "name": "it-budget-backend",
+  "version": "1.0.0",
+  "description": "IT Budget Backend",
+  "main": "src/server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate:latest": "knex migrate:latest",
+    "seed:mandatory": "knex seed:run --specific=002_mandatory.js",
+    "seed:optional": "knex seed:run --specific=003_optional.js",
+    "db:setup": "npm run migrate:latest && npm run seed:mandatory && npm run seed:optional",
+    "db:reset": "npm run migrate:rollback --all && npm run migrate:latest && npm run seed:mandatory && npm run seed:optional"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "mssql": "^9.1.1",
+    "knex": "^3.0.1",
+    "passport": "^0.7.0",
+    "jsonwebtoken": "^9.1.2",
+    "bcryptjs": "^2.4.3",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  }
+}
