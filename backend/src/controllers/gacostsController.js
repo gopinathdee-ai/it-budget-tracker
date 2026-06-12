@@ -116,7 +116,7 @@ export async function create(req, res, next) {
       });
     }
 
-    const [gaCostId] = await db('GACosts').insert({
+    const ids = await db('GACosts').insert({
       year,
       category,
       costType,
@@ -127,7 +127,9 @@ export async function create(req, res, next) {
       createdByUserId: req.user?.id || null,
       createdAt: db.fn.now(),
       updatedAt: db.fn.now()
-    });
+    }).returning('id');
+
+    const gaCostId = Array.isArray(ids) ? ids[0] : ids;
 
     const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
     await db('GACostsBudget').insert({
