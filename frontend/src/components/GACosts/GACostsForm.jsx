@@ -86,8 +86,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-800 p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-white">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-800 p-6 rounded-lg max-h-screen overflow-y-auto">
+      <h2 className="text-xl font-bold mb-4 text-white sticky top-0 bg-slate-800 pb-2">
         {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
       </h2>
 
@@ -97,7 +97,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Year */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1">Year *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Year *</label>
           <select
             name="year"
             value={formData.year}
@@ -112,22 +112,22 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+          <label className="block text-sm font-medium text-slate-200 mb-1">Category *</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Category</option>
             {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
           </select>
-          {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
+          {errors.category && <p className="mt-1 text-sm text-red-400">{errors.category}</p>}
         </div>
 
         {/* Cost Type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Cost Type *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Cost Type *</label>
           <select
             name="costType"
             value={formData.costType}
@@ -137,12 +137,12 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             <option value="">Select Type</option>
             {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
           </select>
-          {errors.costType && <p className="mt-1 text-sm text-red-600">{errors.costType}</p>}
+          {errors.costType && <p className="mt-1 text-sm text-red-400">{errors.costType}</p>}
         </div>
 
         {/* Version */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Version</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Version</label>
           <input
             type="text"
             name="version"
@@ -155,35 +155,35 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
 
         {/* Service/Software */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Service/Software *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Service/Software *</label>
           <input
             type="text"
             name="serviceSoftware"
             value={formData.serviceSoftware}
             onChange={handleChange}
             placeholder="e.g., Microsoft Office 365"
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceSoftware ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceSoftware ? 'border-red-500' : 'border-slate-600'}`}
           />
-          {errors.serviceSoftware && <p className="mt-1 text-sm text-red-600">{errors.serviceSoftware}</p>}
+          {errors.serviceSoftware && <p className="mt-1 text-sm text-red-400">{errors.serviceSoftware}</p>}
         </div>
 
         {/* Vendor */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Vendor *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Vendor *</label>
           <input
             type="text"
             name="vendor"
             value={formData.vendor}
             onChange={handleChange}
             placeholder="e.g., Microsoft"
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.vendor ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.vendor ? 'border-red-500' : 'border-slate-600'}`}
           />
-          {errors.vendor && <p className="mt-1 text-sm text-red-600">{errors.vendor}</p>}
+          {errors.vendor && <p className="mt-1 text-sm text-red-400">{errors.vendor}</p>}
         </div>
 
         {/* Budget Maintenance */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Budget - Maintenance</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Budget - Maintenance</label>
           <input
             type="number"
             name="budgetMaintenance"
@@ -198,7 +198,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
 
         {/* Budget New */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Budget - New</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Budget - New</label>
           <input
             type="number"
             name="budgetNew"
