@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLock, FaShare } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
@@ -157,7 +157,13 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                   <tr key={item.id} className={`border-b border-slate-700/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
                     <td className="px-3 py-2 font-medium text-white">{item.year}</td>
                     <td className="px-3 py-2 text-slate-300">{item.category}</td>
-                    <td className="px-3 py-2 text-slate-300">{item.costType}</td>
+                    <td className="px-3 py-2 text-center" title={item.costType}>
+                      {item.costType === 'Retained' ? (
+                        <FaLock className="text-blue-400 inline-block" title="Retained" />
+                      ) : (
+                        <FaShare className="text-emerald-400 inline-block" title="Distributed" />
+                      )}
+                    </td>
                     <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
                     <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
                     <td className="px-3 py-2 text-right font-semibold text-white">{formatCurrency(item.budgetTotal)}</td>
