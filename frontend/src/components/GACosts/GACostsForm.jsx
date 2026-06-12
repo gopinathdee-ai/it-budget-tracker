@@ -1,0 +1,235 @@
+import { useState, useEffect } from 'react';
+import { useApi } from '../../hooks/useApi.js';
+import LoadingSpinner from '../common/LoadingSpinner.jsx';
+import ErrorMessage from '../common/ErrorMessage.jsx';
+
+const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
+const COST_TYPES = ['Retained', 'Distributed'];
+const YEARS = [2024, 2025, 2026, 2027];
+
+export default function GACostsForm({ cost, onSuccess, onCancel }) {
+  const [formData, setFormData] = useState({
+    year: '',
+    category: '',
+    costType: '',
+    serviceSoftware: '',
+    vendor: '',
+    version: '',
+    budgetMaintenance: '',
+    budgetNew: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(null);
+  const { request, loading } = useApi();
+
+  useEffect(() => {
+    if (cost) {
+      setFormData({
+        year: cost.year || '',
+        category: cost.category || '',
+        costType: cost.costType || '',
+        serviceSoftware: cost.serviceSoftware || '',
+        vendor: cost.vendor || '',
+        version: cost.version || '',
+        budgetMaintenance: cost.budgetMaintenance || '',
+        budgetNew: cost.budgetNew || ''
+      });
+    }
+  }, [cost]);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.year) newErrors.year = 'Year is required';
+    if (!formData.category) newErrors.category = 'Category is required';
+    if (!formData.costType) newErrors.costType = 'Cost Type is required';
+    if (!formData.serviceSoftware.trim()) newErrors.serviceSoftware = 'Service/Software is required';
+    if (!formData.vendor.trim()) newErrors.vendor = 'Vendor is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      setError(null);
+      const payload = {
+        year: parseInt(formData.year),
+        category: formData.category,
+        costType: formData.costType,
+        serviceSoftware: formData.serviceSoftware.trim(),
+        vendor: formData.vendor.trim(),
+        version: formData.version.trim() || undefined,
+        budgetMaintenance: formData.budgetMaintenance ? parseFloat(formData.budgetMaintenance) : 0,
+        budgetNew: formData.budgetNew ? parseFloat(formData.budgetNew) : 0
+      };
+
+      if (cost) {
+        await request('PUT', `/api/gacosts/${cost.id}`, payload);
+      } else {
+        await request('POST', '/api/gacosts', payload);
+      }
+
+      onSuccess?.();
+    } catch (err) {
+      setError(err.response?.data?.error?.message || 'Failed to save G&A cost');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg">
+      <h2 className="text-2xl font-bold mb-6">
+        {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
+      </h2>
+
+      {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
+      {loading && <LoadingSpinner message="Saving..." />}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Year */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Year *</label>
+          <select
+            name="year"
+            value={formData.year}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.year ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select Year</option>
+            {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+          </select>
+          {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select Category</option>
+            {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+          </select>
+          {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
+        </div>
+
+        {/* Cost Type */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Cost Type *</label>
+          <select
+            name="costType"
+            value={formData.costType}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costType ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select Type</option>
+            {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
+          </select>
+          {errors.costType && <p className="mt-1 text-sm text-red-600">{errors.costType}</p>}
+        </div>
+
+        {/* Version */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Version</label>
+          <input
+            type="text"
+            name="version"
+            value={formData.version}
+            onChange={handleChange}
+            placeholder="e.g., 2.1.0"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Service/Software */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Service/Software *</label>
+          <input
+            type="text"
+            name="serviceSoftware"
+            value={formData.serviceSoftware}
+            onChange={handleChange}
+            placeholder="e.g., Microsoft Office 365"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceSoftware ? 'border-red-500' : 'border-gray-300'}`}
+          />
+          {errors.serviceSoftware && <p className="mt-1 text-sm text-red-600">{errors.serviceSoftware}</p>}
+        </div>
+
+        {/* Vendor */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Vendor *</label>
+          <input
+            type="text"
+            name="vendor"
+            value={formData.vendor}
+            onChange={handleChange}
+            placeholder="e.g., Microsoft"
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.vendor ? 'border-red-500' : 'border-gray-300'}`}
+          />
+          {errors.vendor && <p className="mt-1 text-sm text-red-600">{errors.vendor}</p>}
+        </div>
+
+        {/* Budget Maintenance */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Budget - Maintenance</label>
+          <input
+            type="number"
+            name="budgetMaintenance"
+            value={formData.budgetMaintenance}
+            onChange={handleChange}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Budget New */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Budget - New</label>
+          <input
+            type="number"
+            name="budgetNew"
+            value={formData.budgetNew}
+            onChange={handleChange}
+            placeholder="0.00"
+            step="0.01"
+            min="0"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-3 mt-6 pt-4 border-t">
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 font-medium"
+        >
+          {loading ? 'Saving...' : cost ? 'Update' : 'Create'}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={loading}
+          className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50 font-medium"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  );
+}

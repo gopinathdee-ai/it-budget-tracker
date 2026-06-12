@@ -72,17 +72,16 @@ app.get('/api/info', (req, res) => {
   });
 });
 
-// ===== Routes (will add these) =====
-// TODO: Import and use routes
+// ===== Routes =====
+import gaCostsRoutes from './routes/gacosts.js';
 // import authRoutes from './routes/auth.js';
-// import gaCostsRoutes from './routes/ga-costs.js';
 // import projectsRoutes from './routes/projects.js';
-// import reportsRoutes from './routes/reports.js';
-//
+// import dashboardRoutes from './routes/dashboard.js';
+
+app.use('/api/gacosts', gaCostsRoutes);
 // app.use('/api/auth', authRoutes);
-// app.use('/api/ga-costs', gaCostsRoutes);
 // app.use('/api/projects', projectsRoutes);
-// app.use('/api/reports', reportsRoutes);
+// app.use('/api/dashboard', dashboardRoutes);
 
 // ===== 404 Handler =====
 app.use((req, res) => {
@@ -96,10 +95,19 @@ app.use((req, res) => {
 // ===== Error Handler =====
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal server error',
-    status: err.status || 500,
-    ...(NODE_ENV === 'development' && { stack: err.stack }),
+  const statusCode = err.statusCode || err.status || 500;
+  const errorCode = err.code || 'INTERNAL_SERVER_ERROR';
+
+  res.status(statusCode).json({
+    success: false,
+    error: {
+      code: errorCode,
+      message: err.message || 'Internal server error'
+    },
+    meta: {
+      timestamp: new Date().toISOString(),
+      ...(NODE_ENV === 'development' && { stack: err.stack })
+    }
   });
 });
 
