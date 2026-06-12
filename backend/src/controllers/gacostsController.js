@@ -116,7 +116,7 @@ export async function create(req, res, next) {
       });
     }
 
-    const ids = await db('GACosts').insert({
+    const result = await db('GACosts').insert({
       year,
       category,
       costType,
@@ -127,9 +127,14 @@ export async function create(req, res, next) {
       createdByUserId: req.user?.id || null,
       createdAt: db.fn.now(),
       updatedAt: db.fn.now()
-    }).returning('id');
+    });
 
-    const gaCostId = Array.isArray(ids) ? ids[0] : ids;
+    let gaCostId;
+    if (Array.isArray(result)) {
+      gaCostId = typeof result[0] === 'object' ? result[0].id : result[0];
+    } else {
+      gaCostId = typeof result === 'object' ? result.id : result;
+    }
 
     const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
     await db('GACostsBudget').insert({
