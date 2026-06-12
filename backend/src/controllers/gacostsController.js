@@ -10,7 +10,17 @@ export async function getAll(req, res, next) {
     const size = Math.min(100, Math.max(1, parseInt(pageSize) || 10));
 
     let query = db('GACosts').select(
-      'GACosts.*',
+      'GACosts.id',
+      'GACosts.year',
+      'GACosts.category',
+      'GACosts.costType',
+      'GACosts.serviceSoftware',
+      'GACosts.vendor',
+      'GACosts.version',
+      'GACosts.currencyCode',
+      'GACosts.createdByUserId',
+      'GACosts.createdAt',
+      'GACosts.updatedAt',
       db.raw('COALESCE(GACostsBudget.maintenanceAmount, 0) as budgetMaintenance'),
       db.raw('COALESCE(GACostsBudget.newAmount, 0) as budgetNew'),
       db.raw('COALESCE(GACostsBudget.totalAmount, 0) as budgetTotal'),
@@ -64,9 +74,19 @@ export async function getById(req, res, next) {
     const { id } = req.params;
 
     const gaCost = await db('GACosts')
-      .where('id', id)
+      .where('GACosts.id', id)
       .select(
-        'GACosts.*',
+        'GACosts.id',
+        'GACosts.year',
+        'GACosts.category',
+        'GACosts.costType',
+        'GACosts.serviceSoftware',
+        'GACosts.vendor',
+        'GACosts.version',
+        'GACosts.currencyCode',
+        'GACosts.createdByUserId',
+        'GACosts.createdAt',
+        'GACosts.updatedAt',
         db.raw('COALESCE(GACostsBudget.maintenanceAmount, 0) as budgetMaintenance'),
         db.raw('COALESCE(GACostsBudget.newAmount, 0) as budgetNew'),
         db.raw('COALESCE(GACostsBudget.totalAmount, 0) as budgetTotal'),
@@ -158,9 +178,19 @@ export async function create(req, res, next) {
     });
 
     const newCost = await db('GACosts')
-      .where('id', gaCostId)
+      .where('GACosts.id', gaCostId)
       .select(
-        'GACosts.*',
+        'GACosts.id',
+        'GACosts.year',
+        'GACosts.category',
+        'GACosts.costType',
+        'GACosts.serviceSoftware',
+        'GACosts.vendor',
+        'GACosts.version',
+        'GACosts.currencyCode',
+        'GACosts.createdByUserId',
+        'GACosts.createdAt',
+        'GACosts.updatedAt',
         db.raw('COALESCE(GACostsBudget.maintenanceAmount, 0) as budgetMaintenance'),
         db.raw('COALESCE(GACostsBudget.newAmount, 0) as budgetNew'),
         db.raw('COALESCE(GACostsBudget.totalAmount, 0) as budgetTotal'),
@@ -245,9 +275,19 @@ export async function update(req, res, next) {
     }
 
     const updatedCost = await db('GACosts')
-      .where('id', id)
+      .where('GACosts.id', id)
       .select(
-        'GACosts.*',
+        'GACosts.id',
+        'GACosts.year',
+        'GACosts.category',
+        'GACosts.costType',
+        'GACosts.serviceSoftware',
+        'GACosts.vendor',
+        'GACosts.version',
+        'GACosts.currencyCode',
+        'GACosts.createdByUserId',
+        'GACosts.createdAt',
+        'GACosts.updatedAt',
         db.raw('COALESCE(GACostsBudget.maintenanceAmount, 0) as budgetMaintenance'),
         db.raw('COALESCE(GACostsBudget.newAmount, 0) as budgetNew'),
         db.raw('COALESCE(GACostsBudget.totalAmount, 0) as budgetTotal'),
