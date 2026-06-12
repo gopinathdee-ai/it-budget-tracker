@@ -116,7 +116,7 @@ export async function create(req, res, next) {
       });
     }
 
-    const result = await db('GACosts').insert({
+    await db('GACosts').insert({
       year,
       category,
       costType,
@@ -129,12 +129,14 @@ export async function create(req, res, next) {
       updatedAt: db.fn.now()
     });
 
-    let gaCostId;
-    if (Array.isArray(result)) {
-      gaCostId = typeof result[0] === 'object' ? result[0].id : result[0];
-    } else {
-      gaCostId = typeof result === 'object' ? result.id : result;
-    }
+    const inserted = await db('GACosts')
+      .where('serviceSoftware', serviceSoftware)
+      .where('vendor', vendor)
+      .where('year', year)
+      .orderBy('createdAt', 'desc')
+      .first();
+
+    const gaCostId = inserted.id;
 
     const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
     await db('GACostsBudget').insert({

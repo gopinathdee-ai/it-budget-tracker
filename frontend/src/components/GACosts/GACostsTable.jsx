@@ -15,6 +15,8 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
   const pageSize = 10;
   const [filters, setFilters] = useState({ year: '', category: '', costType: '' });
   const [error, setError] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const { request, loading } = useApi();
 
   const fetchData = useCallback(async () => {
@@ -49,15 +51,22 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
     setFilters({ year: '', category: '', costType: '' });
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this G&A cost?')) {
-      try {
-        await request('DELETE', `/api/gacosts/${id}`);
-        fetchData();
-        onDelete?.(id);
-      } catch (err) {
-        setError('Failed to delete G&A cost');
-      }
+  const handleDeleteClick = (id) => {
+    setDeleteConfirm(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirm) return;
+    setDeleting(true);
+    try {
+      await request('DELETE', `/api/gacosts/${deleteConfirm}`);
+      setDeleteConfirm(null);
+      fetchData();
+      onDelete?.(deleteConfirm);
+    } catch (err) {
+      setError('Failed to delete G&A cost');
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -164,7 +173,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                         <FaEdit size={12} /> Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDeleteClick(item.id)}
                         className="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <FaTrash size={12} /> Delete
@@ -203,6 +212,32 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
         </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 rounded-lg shadow-xl max-w-sm w-full border border-slate-700 p-6">
+            <h3 className="text-lg font-bold text-white mb-2">Delete G&A Cost?</h3>
+            <p className="text-slate-300 text-sm mb-6">This action cannot be undone. Are you sure?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleConfirmDelete}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded hover:from-red-700 hover:to-red-800 disabled:opacity-50 font-medium transition-all"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleting}
+                className="flex-1 px-4 py-2 bg-slate-700 text-slate-200 rounded hover:bg-slate-600 disabled:opacity-50 font-medium transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
