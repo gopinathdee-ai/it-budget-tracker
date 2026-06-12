@@ -9,7 +9,7 @@ const YEARS = [2024, 2025, 2026, 2027];
 
 export default function GACostsForm({ cost, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
-    year: '',
+    year: new Date().getFullYear().toString(),
     category: '',
     costType: '',
     serviceSoftware: '',
@@ -132,7 +132,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             name="costType"
             value={formData.costType}
             onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costType ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costType ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Type</option>
             {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
