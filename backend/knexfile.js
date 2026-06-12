@@ -1,24 +1,22 @@
 // knexfile.js - Knex.js configuration for database migrations
 // This file defines how to connect to the database and run migrations
 
-require('dotenv').config();
+import dotenv from 'dotenv';
 
-module.exports = {
+dotenv.config();
+
+export default {
   // Development environment
   development: {
     client: 'mssql',
     connection: {
-      server: process.env.DATABASE_HOST || 'localhost\\SQLEXPRESS',
+      server: 'localhost',
       database: process.env.DATABASE_NAME || 'ITBudgetDB',
-      authentication: {
-        type: 'default',
-        options: {
-          userName: process.env.DATABASE_USER || 'itbudgetadmin',
-          password: process.env.DATABASE_PASSWORD || 'YourPassword123!',
-        }
-      },
+      user: process.env.DATABASE_USER || 'itbudgetadmin',
+      password: process.env.DATABASE_PASSWORD || 'YourPassword123!',
       options: {
         trustServerCertificate: true,
+        encrypt: false,
         enableKeepAlive: true,
       }
     },
@@ -42,15 +40,11 @@ module.exports = {
     connection: {
       server: process.env.DATABASE_HOST,
       database: process.env.DATABASE_NAME,
-      authentication: {
-        type: 'default',
-        options: {
-          userName: process.env.DATABASE_USER,
-          password: process.env.DATABASE_PASSWORD,
-        }
-      },
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
       options: {
         trustServerCertificate: true,
+        encrypt: false,
         enableKeepAlive: true,
       }
     },
@@ -74,15 +68,11 @@ module.exports = {
     connection: {
       server: process.env.DATABASE_HOST,
       database: process.env.DATABASE_NAME,
-      authentication: {
-        type: 'default',
-        options: {
-          userName: process.env.DATABASE_USER,
-          password: process.env.DATABASE_PASSWORD,
-        }
-      },
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
       options: {
         trustServerCertificate: false,
+        encrypt: true,
         enableKeepAlive: true,
       }
     },

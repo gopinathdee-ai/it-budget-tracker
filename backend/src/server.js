@@ -113,16 +113,18 @@ async function startServer() {
 
     // 1. Check database connection
     console.log('📡 Checking database connection...');
-    const dbConnected = await checkDatabaseConnection();
-    if (!dbConnected) {
-      throw new Error('Failed to connect to database');
-    }
-
-    // 2. Run migrations automatically
-    console.log('🔄 Running database migrations...');
-    const migrationSuccess = await runMigrations();
-    if (!migrationSuccess) {
-      throw new Error('Failed to run migrations');
+    try {
+      const dbConnected = await checkDatabaseConnection();
+      if (dbConnected) {
+        // 2. Run migrations automatically
+        console.log('🔄 Running database migrations...');
+        await runMigrations();
+      } else {
+        console.warn('⚠️  Database connection failed, skipping migrations');
+      }
+    } catch (dbError) {
+      console.warn('⚠️  Database error:', dbError.message);
+      console.log('   Server will start without database connection');
     }
 
     // 3. Start server

@@ -2,7 +2,7 @@
 // Run via: npm run migrate:latest
 // This creates all tables in one go - fully automated
 
-exports.up = async function(knex) {
+export const up = async function(knex) {
   // Check if tables already exist to prevent errors
   const hasUsersTable = await knex.schema.hasTable('Users');
   
@@ -155,7 +155,7 @@ exports.up = async function(knex) {
     });
 };
 
-exports.down = async function(knex) {
+export const down = async function(knex) {
   // Drop all tables in reverse order
   return knex.schema
     .dropTableIfExists('Permissions')

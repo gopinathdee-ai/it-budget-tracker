@@ -7,6 +7,9 @@ pnpm-debug.log*
 package-lock.json
 yarn.lock
 
+# Claude Code memory (auto-generated)
+.claude/
+
 # Environment variables
 .env
 .env.local
