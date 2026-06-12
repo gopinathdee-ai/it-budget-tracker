@@ -79,24 +79,46 @@ export default function GACostsDashboard({ refreshTrigger }) {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow">
-            <p className="text-sm text-gray-600 mb-2">Total Budget</p>
-            <p className="text-3xl font-bold text-blue-600">{formatCurrency(summary.totalBudget)}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="card p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 shadow-md hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wide">Total Budget</p>
+                <p className="text-3xl font-bold text-blue-900">{formatCurrency(summary.totalBudget)}</p>
+              </div>
+              <span className="text-4xl">💼</span>
+            </div>
           </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow">
-            <p className="text-sm text-gray-600 mb-2">Total Actual</p>
-            <p className="text-3xl font-bold text-green-600">{formatCurrency(summary.totalActual)}</p>
+          <div className="card p-6 bg-gradient-to-br from-green-50 to-green-100 border-green-200 shadow-md hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-green-600 mb-2 uppercase tracking-wide">Total Actual</p>
+                <p className="text-3xl font-bold text-green-900">{formatCurrency(summary.totalActual)}</p>
+              </div>
+              <span className="text-4xl">✅</span>
+            </div>
           </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow">
-            <p className="text-sm text-gray-600 mb-2">Variance</p>
-            <p className={`text-3xl font-bold ${summary.variance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatCurrency(summary.variance)}
-            </p>
+          <div className={`card p-6 bg-gradient-to-br ${summary.variance >= 0 ? 'from-green-50 to-green-100 border-green-200' : 'from-red-50 to-red-100 border-red-200'} shadow-md hover:shadow-lg transition-shadow`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold mb-2 uppercase tracking-wide" style={{ color: summary.variance >= 0 ? '#047857' : '#dc2626' }}>
+                  Variance
+                </p>
+                <p className={`text-3xl font-bold ${summary.variance >= 0 ? 'text-green-900' : 'text-red-900'}`}>
+                  {formatCurrency(summary.variance)}
+                </p>
+              </div>
+              <span className="text-4xl">{summary.variance >= 0 ? '📈' : '📉'}</span>
+            </div>
           </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow">
-            <p className="text-sm text-gray-600 mb-2">Utilization</p>
-            <p className="text-3xl font-bold text-purple-600">{formatPercent(summary.utilization)}</p>
+          <div className="card p-6 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 shadow-md hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-purple-600 mb-2 uppercase tracking-wide">Utilization</p>
+                <p className="text-3xl font-bold text-purple-900">{formatPercent(summary.utilization)}</p>
+              </div>
+              <span className="text-4xl">📊</span>
+            </div>
           </div>
         </div>
       )}

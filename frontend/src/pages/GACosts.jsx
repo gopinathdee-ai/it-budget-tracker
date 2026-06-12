@@ -28,15 +28,18 @@ export default function GACostsPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">G&A Costs Management</h1>
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">G&A Costs Management</h1>
+          <p className="text-gray-500">Manage and track all G&A costs across your organization</p>
+        </div>
         <button
           onClick={() => {
             setSelectedCost(null);
             setShowForm(true);
           }}
-          className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 font-medium"
+          className="btn-success shadow-lg hover:shadow-xl"
         >
-          + New G&A Cost
+          ➕ New G&A Cost
         </button>
       </div>
 

@@ -67,8 +67,8 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Filters */}
-      <div className="bg-gray-50 p-4 rounded-lg">
-        <h3 className="font-semibold mb-3">Filters</h3>
+      <div className="card p-6 bg-gradient-to-r from-gray-50 to-white">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">🔍 Filters</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
@@ -116,53 +116,55 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="card overflow-hidden shadow-md">
         {data.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            No G&A costs found. Try adjusting your filters.
+          <div className="p-12 text-center">
+            <span className="text-5xl mb-4 block">📭</span>
+            <p className="text-gray-500 text-lg">No G&A costs found. Try adjusting your filters.</p>
           </div>
         ) : (
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 text-left text-sm font-semibold">Year</th>
-                <th className="p-3 text-left text-sm font-semibold">Category</th>
-                <th className="p-3 text-left text-sm font-semibold">Type</th>
-                <th className="p-3 text-left text-sm font-semibold">Service/Software</th>
-                <th className="p-3 text-left text-sm font-semibold">Vendor</th>
-                <th className="p-3 text-right text-sm font-semibold">Budget</th>
-                <th className="p-3 text-right text-sm font-semibold">Actual</th>
-                <th className="p-3 text-right text-sm font-semibold">Variance</th>
-                <th className="p-3 text-center text-sm font-semibold">Actions</th>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+                <tr>
+                  <th className="p-4 text-left text-sm font-semibold">Year</th>
+                <th className="p-4 text-left text-sm font-semibold">Category</th>
+                <th className="p-4 text-left text-sm font-semibold">Type</th>
+                <th className="p-4 text-left text-sm font-semibold">Service/Software</th>
+                <th className="p-4 text-left text-sm font-semibold">Vendor</th>
+                <th className="p-4 text-right text-sm font-semibold">Budget</th>
+                <th className="p-4 text-right text-sm font-semibold">Actual</th>
+                <th className="p-4 text-right text-sm font-semibold">Variance</th>
+                <th className="p-4 text-center text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, idx) => {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 return (
-                  <tr key={item.id} className={`border-b ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
-                    <td className="p-3 text-sm">{item.year}</td>
-                    <td className="p-3 text-sm">{item.category}</td>
-                    <td className="p-3 text-sm">{item.costType}</td>
-                    <td className="p-3 text-sm">{item.serviceSoftware}</td>
-                    <td className="p-3 text-sm">{item.vendor}</td>
-                    <td className="p-3 text-right text-sm">{formatCurrency(item.budgetTotal)}</td>
-                    <td className="p-3 text-right text-sm">{formatCurrency(item.actualTotal)}</td>
-                    <td className={`p-3 text-right text-sm font-semibold ${variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  <tr key={item.id} className={`border-b transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
+                    <td className="p-4 text-sm font-medium text-gray-900">{item.year}</td>
+                    <td className="p-4 text-sm text-gray-600">{item.category}</td>
+                    <td className="p-4 text-sm text-gray-600">{item.costType}</td>
+                    <td className="p-4 text-sm text-gray-600">{item.serviceSoftware}</td>
+                    <td className="p-4 text-sm text-gray-600">{item.vendor}</td>
+                    <td className="p-4 text-right text-sm font-semibold text-gray-900">{formatCurrency(item.budgetTotal)}</td>
+                    <td className="p-4 text-right text-sm font-semibold text-gray-900">{formatCurrency(item.actualTotal)}</td>
+                    <td className={`p-4 text-right text-sm font-bold ${variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
                       {formatCurrency(variance)}
                     </td>
-                    <td className="p-3 text-center space-x-2">
+                    <td className="p-4 text-center space-x-2">
                       <button
                         onClick={() => onEdit?.(item)}
-                        className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                        className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 font-medium transition-colors"
                       >
-                        Edit
+                        ✏️ Edit
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600"
+                        className="px-3 py-1 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 font-medium transition-colors"
                       >
-                        Delete
+                        🗑️ Delete
                       </button>
                     </td>
                   </tr>
@@ -175,24 +177,24 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
       {/* Pagination */}
       {data.length > 0 && (
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-gray-600">
-            Page {page} | {data.length} items
+        <div className="flex justify-between items-center mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="text-sm font-medium text-gray-600">
+            Page <span className="font-bold text-gray-900">{page}</span> • <span className="font-bold text-gray-900">{data.length}</span> items shown
           </div>
           <div className="space-x-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium"
             >
-              Previous
+              ⬅️ Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={data.length < pageSize}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded disabled:opacity-50"
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium"
             >
-              Next
+              Next ➡️
             </button>
           </div>
         </div>

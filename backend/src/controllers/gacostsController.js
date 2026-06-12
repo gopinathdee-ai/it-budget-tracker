@@ -1,7 +1,4 @@
-import knex from 'knex';
-import knexConfig from '../../knexfile.js';
-
-const db = db(knexConfig.development);
+import { db } from '../server.js';
 
 const VALID_CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const VALID_COST_TYPES = ['Retained', 'Distributed'];
@@ -227,7 +224,9 @@ export async function update(req, res, next) {
     await db('GACosts').where('id', id).update(updateData);
 
     if (budgetMaintenance !== undefined || budgetNew !== undefined) {
-      const budgetTotal = (budgetMaintenance ?? existingCost.budgetMaintenance || 0) + (budgetNew ?? existingCost.budgetNew || 0);
+      const mainAmount = budgetMaintenance ?? existingCost.budgetMaintenance ?? 0;
+      const newAmount = budgetNew ?? existingCost.budgetNew ?? 0;
+      const budgetTotal = mainAmount + newAmount;
       await db('GACostsBudget').where('gaCostId', id).update({
         maintenanceAmount: budgetMaintenance ?? db.raw('maintenanceAmount'),
         newAmount: budgetNew ?? db.raw('newAmount'),

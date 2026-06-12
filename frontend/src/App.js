@@ -6,30 +6,45 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Navigation */}
-      <nav className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-600">IT Budget Tracker</h1>
-          <div className="flex gap-4">
+      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">₿</span>
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              IT Budget Tracker
+            </h1>
+          </div>
+          <div className="flex gap-2">
             <button
               onClick={() => setCurrentPage('dashboard')}
-              className={`px-4 py-2 rounded ${currentPage === 'dashboard' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+                currentPage === 'dashboard'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
             >
-              Dashboard
+              📊 Dashboard
             </button>
             <button
               onClick={() => setCurrentPage('gacosts')}
-              className={`px-4 py-2 rounded ${currentPage === 'gacosts' ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+                currentPage === 'gacosts'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
             >
-              G&A Costs
+              💰 G&A Costs
             </button>
           </div>
         </div>
       </nav>
 
       {/* Page Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-12">
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'gacosts' && <GACosts />}
       </main>
