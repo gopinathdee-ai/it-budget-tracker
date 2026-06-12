@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useApi } from '../../hooks/useApi.js';
-import { formatCurrency, formatDate } from '../../utils/formatters.js';
+import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
 
@@ -11,16 +11,12 @@ const YEARS = [2024, 2025, 2026, 2027];
 export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 10;
   const [filters, setFilters] = useState({ year: '', category: '', costType: '' });
   const [error, setError] = useState(null);
   const { request, loading } = useApi();
 
-  useEffect(() => {
-    fetchData();
-  }, [page, filters, refreshTrigger]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setError(null);
       const params = new URLSearchParams({
@@ -36,7 +32,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
     } catch (err) {
       setError('Failed to load G&A costs');
     }
-  };
+  }, [page, filters, pageSize, request]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, refreshTrigger]);
 
   const handleFilterChange = (field, value) => {
     setPage(1);
@@ -172,11 +172,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
               })}
             </tbody>
           </table>
+          </div>
         )}
-      </div>
 
-      {/* Pagination */}
-      {data.length > 0 && (
+        {/* Pagination */}
+        {data.length > 0 && (
         <div className="flex justify-between items-center mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <div className="text-sm font-medium text-gray-600">
             Page <span className="font-bold text-gray-900">{page}</span> • <span className="font-bold text-gray-900">{data.length}</span> items shown
@@ -198,7 +198,8 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
             </button>
           </div>
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

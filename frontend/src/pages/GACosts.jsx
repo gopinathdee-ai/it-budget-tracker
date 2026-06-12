@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Box, Button, Typography, Dialog, CircularProgress } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import GACostsTable from '../components/GACosts/GACostsTable.jsx';
 import GACostsForm from '../components/GACosts/GACostsForm.jsx';
 import GACostsDashboard from '../components/GACosts/GACostsDashboard.jsx';
@@ -25,48 +27,59 @@ export default function GACostsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">G&A Costs Management</h1>
-          <p className="text-gray-500">Manage and track all G&A costs across your organization</p>
-        </div>
-        <button
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Box>
+          <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+            G&A Costs Management
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+            Manage and track all G&A costs across your organization
+          </Typography>
+        </Box>
+        <Button
+          variant="contained"
+          color="success"
+          size="large"
+          startIcon={<AddIcon />}
           onClick={() => {
             setSelectedCost(null);
             setShowForm(true);
           }}
-          className="btn-success shadow-lg hover:shadow-xl"
+          sx={{ fontWeight: 600 }}
         >
-          ➕ New G&A Cost
-        </button>
-      </div>
+          New G&A Cost
+        </Button>
+      </Box>
 
       {/* Dashboard */}
       <GACostsDashboard refreshTrigger={refreshKey} />
 
       {/* Form Modal */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <GACostsForm
-              cost={selectedCost}
-              onSuccess={handleSuccess}
-              onCancel={handleCancel}
-            />
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={showForm}
+        onClose={handleCancel}
+        maxWidth="md"
+        fullWidth
+      >
+        <GACostsForm
+          cost={selectedCost}
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
+        />
+      </Dialog>
 
       {/* Table */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4">G&A Costs List</h2>
+      <Box>
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+          G&A Costs List
+        </Typography>
         <GACostsTable
           onEdit={handleEdit}
           refreshTrigger={refreshKey}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
