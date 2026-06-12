@@ -68,17 +68,17 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Filters */}
-      <div className="card p-6 bg-gradient-to-r from-slate-800 to-slate-700">
-        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <FaSearch className="text-blue-400" /> Filters
+      <div className="card p-3 bg-gradient-to-r from-slate-800 to-slate-700 mb-4">
+        <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+          <FaSearch className="text-sm text-blue-400" /> Filters
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Year</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Year</label>
             <select
               value={filters.year}
               onChange={(e) => handleFilterChange('year', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Years</option>
               {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
@@ -86,11 +86,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Category</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Category</label>
             <select
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Categories</option>
               {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -98,11 +98,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">Cost Type</label>
+            <label className="block text-xs font-medium text-slate-300 mb-1">Cost Type</label>
             <select
               value={filters.costType}
               onChange={(e) => handleFilterChange('costType', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Types</option>
               {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
@@ -112,7 +112,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
         <button
           onClick={handleClearFilters}
-          className="mt-3 px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600 text-sm transition-colors"
+          className="mt-2 px-3 py-1.5 text-xs bg-slate-700 text-slate-200 rounded hover:bg-slate-600 transition-colors font-medium"
         >
           Clear Filters
         </button>
@@ -121,53 +121,53 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       {/* Table */}
       <div className="card overflow-hidden shadow-md">
         {data.length === 0 ? (
-          <div className="p-12 text-center">
-            <FaSearch className="text-5xl mb-4 mx-auto text-slate-600" />
-            <p className="text-slate-400 text-lg">No G&A costs found. Try adjusting your filters.</p>
+          <div className="p-8 text-center">
+            <FaSearch className="text-3xl mb-3 mx-auto text-slate-600" />
+            <p className="text-slate-400 text-sm">No G&A costs found. Try adjusting your filters.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-slate-900 to-slate-800 text-white">
+            <table className="w-full text-xs">
+              <thead className="bg-gradient-to-r from-slate-900 to-slate-800 text-white sticky top-0">
                 <tr>
-                  <th className="p-4 text-left text-sm font-semibold">Year</th>
-                <th className="p-4 text-left text-sm font-semibold">Category</th>
-                <th className="p-4 text-left text-sm font-semibold">Type</th>
-                <th className="p-4 text-left text-sm font-semibold">Service/Software</th>
-                <th className="p-4 text-left text-sm font-semibold">Vendor</th>
-                <th className="p-4 text-right text-sm font-semibold">Budget</th>
-                <th className="p-4 text-right text-sm font-semibold">Actual</th>
-                <th className="p-4 text-right text-sm font-semibold">Variance</th>
-                <th className="p-4 text-center text-sm font-semibold">Actions</th>
+                  <th className="px-3 py-2 text-left font-semibold">Year</th>
+                <th className="px-3 py-2 text-left font-semibold">Category</th>
+                <th className="px-3 py-2 text-left font-semibold">Type</th>
+                <th className="px-3 py-2 text-left font-semibold">Service/Software</th>
+                <th className="px-3 py-2 text-left font-semibold">Vendor</th>
+                <th className="px-3 py-2 text-right font-semibold">Budget</th>
+                <th className="px-3 py-2 text-right font-semibold">Actual</th>
+                <th className="px-3 py-2 text-right font-semibold">Variance</th>
+                <th className="px-3 py-2 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {data.map((item, idx) => {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 return (
-                  <tr key={item.id} className={`border-b border-slate-700 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
-                    <td className="p-4 text-sm font-medium text-white">{item.year}</td>
-                    <td className="p-4 text-sm text-slate-300">{item.category}</td>
-                    <td className="p-4 text-sm text-slate-300">{item.costType}</td>
-                    <td className="p-4 text-sm text-slate-300">{item.serviceSoftware}</td>
-                    <td className="p-4 text-sm text-slate-300">{item.vendor}</td>
-                    <td className="p-4 text-right text-sm font-semibold text-white">{formatCurrency(item.budgetTotal)}</td>
-                    <td className="p-4 text-right text-sm font-semibold text-white">{formatCurrency(item.actualTotal)}</td>
-                    <td className={`p-4 text-right text-sm font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  <tr key={item.id} className={`border-b border-slate-700/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
+                    <td className="px-3 py-2 font-medium text-white">{item.year}</td>
+                    <td className="px-3 py-2 text-slate-300">{item.category}</td>
+                    <td className="px-3 py-2 text-slate-300">{item.costType}</td>
+                    <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
+                    <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
+                    <td className="px-3 py-2 text-right font-semibold text-white">{formatCurrency(item.budgetTotal)}</td>
+                    <td className="px-3 py-2 text-right font-semibold text-white">{formatCurrency(item.actualTotal)}</td>
+                    <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
                       {formatCurrency(variance)}
                     </td>
-                    <td className="p-4 text-center space-x-2">
+                    <td className="px-3 py-2 text-center space-x-1">
                       <button
                         onClick={() => onEdit?.(item)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 font-medium transition-colors inline-flex items-center gap-1"
+                        className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 font-medium transition-colors inline-flex items-center gap-1"
                       >
-                        <FaEdit size={14} /> Edit
+                        <FaEdit size={12} /> Edit
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 font-medium transition-colors inline-flex items-center gap-1"
+                        className="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 font-medium transition-colors inline-flex items-center gap-1"
                       >
-                        <FaTrash size={14} /> Delete
+                        <FaTrash size={12} /> Delete
                       </button>
                     </td>
                   </tr>
@@ -180,24 +180,24 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
         {/* Pagination */}
         {data.length > 0 && (
-        <div className="flex justify-between items-center mt-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-          <div className="text-sm font-medium text-slate-400">
-            Page <span className="font-bold text-white">{page}</span> • <span className="font-bold text-white">{data.length}</span> items shown
+        <div className="flex justify-between items-center mt-4 p-2 bg-slate-800/50 rounded border border-slate-700">
+          <div className="text-xs font-medium text-slate-400">
+            Page <span className="font-bold text-white">{page}</span> • <span className="font-bold text-white">{data.length}</span> items
           </div>
-          <div className="space-x-2">
+          <div className="space-x-1">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
+              className="px-2 py-1 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1"
             >
-              <FaChevronLeft size={14} /> Previous
+              <FaChevronLeft size={12} /> Prev
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={data.length < pageSize}
-              className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
+              className="px-2 py-1 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1"
             >
-              Next <FaChevronRight size={14} />
+              Next <FaChevronRight size={12} />
             </button>
           </div>
         </div>

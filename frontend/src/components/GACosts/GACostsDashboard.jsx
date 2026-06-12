@@ -59,8 +59,8 @@ export default function GACostsDashboard({ refreshTrigger }) {
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">G&A Costs Summary</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-white">G&A Costs Summary</h2>
         <div className="flex gap-2">
           <select
             value={selectedYear}
@@ -80,49 +80,49 @@ export default function GACostsDashboard({ refreshTrigger }) {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="card p-6 bg-gradient-to-br from-blue-900/40 to-blue-800/40 border-blue-600/30 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-blue-300 mb-2 uppercase tracking-wide">Total Budget</p>
-                <p className="text-3xl font-bold text-white">{formatCurrency(summary.totalBudget)}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="card p-4 bg-gradient-to-br from-blue-900/40 to-blue-800/40 border-blue-600/30 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget</p>
+                <p className="text-xl font-bold text-white truncate">{formatCurrency(summary.totalBudget)}</p>
               </div>
-              <FaBriefcase className="text-4xl text-blue-400 opacity-60" />
+              <FaBriefcase className="text-2xl text-blue-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
           </div>
-          <div className="card p-6 bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 border-emerald-600/30 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-emerald-300 mb-2 uppercase tracking-wide">Total Actual</p>
-                <p className="text-3xl font-bold text-white">{formatCurrency(summary.totalActual)}</p>
+          <div className="card p-4 bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 border-emerald-600/30 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-emerald-300 mb-1 uppercase tracking-wide">Total Actual</p>
+                <p className="text-xl font-bold text-white truncate">{formatCurrency(summary.totalActual)}</p>
               </div>
-              <FaCheck className="text-4xl text-emerald-400 opacity-60" />
+              <FaCheck className="text-2xl text-emerald-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
           </div>
-          <div className={`card p-6 bg-gradient-to-br ${summary.variance >= 0 ? 'from-emerald-900/40 to-emerald-800/40 border-emerald-600/30' : 'from-red-900/40 to-red-800/40 border-red-600/30'} shadow-lg hover:shadow-xl transition-shadow`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold mb-2 uppercase tracking-wide" style={{ color: summary.variance >= 0 ? '#a7f3d0' : '#fca5a5' }}>
+          <div className={`card p-4 bg-gradient-to-br ${summary.variance >= 0 ? 'from-emerald-900/40 to-emerald-800/40 border-emerald-600/30' : 'from-red-900/40 to-red-800/40 border-red-600/30'} shadow-lg hover:shadow-xl transition-shadow`}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: summary.variance >= 0 ? '#a7f3d0' : '#fca5a5' }}>
                   Variance
                 </p>
-                <p className={`text-3xl font-bold text-white`}>
+                <p className="text-xl font-bold text-white truncate">
                   {formatCurrency(summary.variance)}
                 </p>
               </div>
               {summary.variance >= 0 ? (
-                <FaArrowUp className="text-4xl text-emerald-400 opacity-60" />
+                <FaArrowUp className="text-2xl text-emerald-400 opacity-60 flex-shrink-0 mt-1" />
               ) : (
-                <FaArrowDown className="text-4xl text-red-400 opacity-60" />
+                <FaArrowDown className="text-2xl text-red-400 opacity-60 flex-shrink-0 mt-1" />
               )}
             </div>
           </div>
-          <div className="card p-6 bg-gradient-to-br from-purple-900/40 to-purple-800/40 border-purple-600/30 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-purple-300 mb-2 uppercase tracking-wide">Utilization</p>
-                <p className="text-3xl font-bold text-white">{formatPercent(summary.utilization)}</p>
+          <div className="card p-4 bg-gradient-to-br from-purple-900/40 to-purple-800/40 border-purple-600/30 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-purple-300 mb-1 uppercase tracking-wide">Utilization</p>
+                <p className="text-xl font-bold text-white truncate">{formatPercent(summary.utilization)}</p>
               </div>
-              <FaChartBar className="text-4xl text-purple-400 opacity-60" />
+              <FaChartBar className="text-2xl text-purple-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
           </div>
         </div>
@@ -130,16 +130,16 @@ export default function GACostsDashboard({ refreshTrigger }) {
 
       {/* Category Breakdown Table */}
       {summary && Object.keys(summary.byCategory).length > 0 && (
-        <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 shadow-lg">
-          <h3 className="text-xl font-semibold mb-4 text-white">By Category</h3>
-          <table className="w-full">
+        <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700 shadow-lg">
+          <h3 className="text-sm font-semibold mb-3 text-white">By Category</h3>
+          <table className="w-full text-xs">
             <thead className="bg-slate-900/50 border-b border-slate-700">
               <tr>
-                <th className="p-3 text-left text-sm font-semibold text-slate-300">Category</th>
-                <th className="p-3 text-right text-sm font-semibold text-slate-300">Budget</th>
-                <th className="p-3 text-right text-sm font-semibold text-slate-300">Actual</th>
-                <th className="p-3 text-right text-sm font-semibold text-slate-300">Variance</th>
-                <th className="p-3 text-right text-sm font-semibold text-slate-300">Utilization</th>
+                <th className="p-2 text-left font-semibold text-slate-300">Category</th>
+                <th className="p-2 text-right font-semibold text-slate-300">Budget</th>
+                <th className="p-2 text-right font-semibold text-slate-300">Actual</th>
+                <th className="p-2 text-right font-semibold text-slate-300">Variance</th>
+                <th className="p-2 text-right font-semibold text-slate-300">Util %</th>
               </tr>
             </thead>
             <tbody>
@@ -147,14 +147,14 @@ export default function GACostsDashboard({ refreshTrigger }) {
                 const variance = data.budget - data.actual;
                 const utilization = data.budget > 0 ? (data.actual / data.budget * 100) : 0;
                 return (
-                  <tr key={category} className="border-b border-slate-700 hover:bg-slate-700/30">
-                    <td className="p-3 text-sm font-medium text-white">{category}</td>
-                    <td className="p-3 text-right text-sm text-slate-300">{formatCurrency(data.budget)}</td>
-                    <td className="p-3 text-right text-sm text-slate-300">{formatCurrency(data.actual)}</td>
-                    <td className={`p-3 text-right text-sm font-semibold ${variance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <tr key={category} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+                    <td className="p-2 font-medium text-white">{category}</td>
+                    <td className="p-2 text-right text-slate-300">{formatCurrency(data.budget)}</td>
+                    <td className="p-2 text-right text-slate-300">{formatCurrency(data.actual)}</td>
+                    <td className={`p-2 text-right font-semibold ${variance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       {formatCurrency(variance)}
                     </td>
-                    <td className="p-3 text-right text-sm text-slate-300">{formatPercent(utilization)}</td>
+                    <td className="p-2 text-right text-slate-300">{formatPercent(utilization)}</td>
                   </tr>
                 );
               })}

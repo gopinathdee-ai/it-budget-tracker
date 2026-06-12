@@ -26,12 +26,12 @@ export default function GACostsPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">G&A Costs Management</h1>
-          <p className="text-slate-400">Manage and track all G&A costs across your organization</p>
+          <h1 className="text-3xl font-bold text-white mb-1">G&A Costs Management</h1>
+          <p className="text-xs text-slate-400">Manage and track all G&A costs across your organization</p>
         </div>
         <button
           onClick={() => {
@@ -49,8 +49,8 @@ export default function GACostsPage() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-700">
             <GACostsForm
               cost={selectedCost}
               onSuccess={handleSuccess}
@@ -62,7 +62,7 @@ export default function GACostsPage() {
 
       {/* Table */}
       <div>
-        <h2 className="text-2xl font-bold mb-4">G&A Costs List</h2>
+        <h2 className="text-lg font-bold mb-3 text-white">G&A Costs List</h2>
         <GACostsTable
           onEdit={handleEdit}
           refreshTrigger={refreshKey}
