@@ -30,8 +30,8 @@ export default function GACostsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">G&A Costs Management</h1>
-          <p className="text-gray-500">Manage and track all G&A costs across your organization</p>
+          <h1 className="text-4xl font-bold text-white mb-2">G&A Costs Management</h1>
+          <p className="text-slate-400">Manage and track all G&A costs across your organization</p>
         </div>
         <button
           onClick={() => {

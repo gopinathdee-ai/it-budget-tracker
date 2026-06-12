@@ -7,9 +7,9 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+      <nav className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
@@ -24,8 +24,8 @@ function App() {
               onClick={() => setCurrentPage('dashboard')}
               className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
                 currentPage === 'dashboard'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
               <FaChartLine /> Dashboard
@@ -34,8 +34,8 @@ function App() {
               onClick={() => setCurrentPage('gacosts')}
               className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
                 currentPage === 'gacosts'
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
               <FaDollarSign /> G&A Costs

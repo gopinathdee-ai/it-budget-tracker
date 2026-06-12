@@ -86,8 +86,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg">
-      <h2 className="text-2xl font-bold mb-6">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-800 p-6 rounded-lg">
+      <h2 className="text-2xl font-bold mb-6 text-white">
         {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
       </h2>
 
@@ -97,17 +97,17 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Year */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Year *</label>
+          <label className="block text-sm font-medium text-slate-300 mb-1">Year *</label>
           <select
             name="year"
             value={formData.year}
             onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.year ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.year ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Year</option>
             {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
           </select>
-          {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
+          {errors.year && <p className="mt-1 text-sm text-red-400">{errors.year}</p>}
         </div>
 
         {/* Category */}
@@ -149,7 +149,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             value={formData.version}
             onChange={handleChange}
             placeholder="e.g., 2.1.0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -192,7 +192,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -207,17 +207,17 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-3 mt-6 pt-4 border-t">
+      <div className="flex gap-3 mt-6 pt-4 border-t border-slate-700">
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 font-medium"
+          className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 font-medium transition-all"
         >
           {loading ? 'Saving...' : cost ? 'Update' : 'Create'}
         </button>
@@ -225,7 +225,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           type="button"
           onClick={onCancel}
           disabled={loading}
-          className="flex-1 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 disabled:opacity-50 font-medium"
+          className="flex-1 px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600 disabled:opacity-50 font-medium transition-colors"
         >
           Cancel
         </button>

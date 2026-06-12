@@ -10,11 +10,11 @@ export default function Dashboard() {
       .catch(err => { setError(err.message); setLoading(false); });
   }, []);
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>IT Budget Dashboard</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      {data && <div style={{ backgroundColor: '#e8f5e9', padding: '20px' }}><h2>Connected!</h2><pre>{JSON.stringify(data, null, 2)}</pre></div>}
+    <div style={{ padding: '20px' }} className="text-white">
+      <h1 className="text-3xl font-bold mb-4">IT Budget Dashboard</h1>
+      {loading && <p className="text-slate-400">Loading...</p>}
+      {error && <p className="text-red-400">Error: {error}</p>}
+      {data && <div className="bg-slate-800/50 border border-slate-700 p-6 rounded-lg"><h2 className="text-xl font-bold text-emerald-400 mb-3">Connected!</h2><pre className="text-slate-300 overflow-auto">{JSON.stringify(data, null, 2)}</pre></div>}
     </div>
   );
 }

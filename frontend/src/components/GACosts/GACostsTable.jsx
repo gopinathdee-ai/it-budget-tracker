@@ -68,17 +68,17 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Filters */}
-      <div className="card p-6 bg-gradient-to-r from-gray-50 to-white">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <FaSearch className="text-blue-600" /> Filters
+      <div className="card p-6 bg-gradient-to-r from-slate-800 to-slate-700">
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <FaSearch className="text-blue-400" /> Filters
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Year</label>
             <select
               value={filters.year}
               onChange={(e) => handleFilterChange('year', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Years</option>
               {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
@@ -86,11 +86,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Category</label>
             <select
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Categories</option>
               {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -98,11 +98,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cost Type</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Cost Type</label>
             <select
               value={filters.costType}
               onChange={(e) => handleFilterChange('costType', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Types</option>
               {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
@@ -112,7 +112,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
         <button
           onClick={handleClearFilters}
-          className="mt-3 px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 text-sm"
+          className="mt-3 px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600 text-sm transition-colors"
         >
           Clear Filters
         </button>
@@ -122,13 +122,13 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       <div className="card overflow-hidden shadow-md">
         {data.length === 0 ? (
           <div className="p-12 text-center">
-            <FaSearch className="text-5xl mb-4 mx-auto text-gray-300" />
-            <p className="text-gray-500 text-lg">No G&A costs found. Try adjusting your filters.</p>
+            <FaSearch className="text-5xl mb-4 mx-auto text-slate-600" />
+            <p className="text-slate-400 text-lg">No G&A costs found. Try adjusting your filters.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+              <thead className="bg-gradient-to-r from-slate-900 to-slate-800 text-white">
                 <tr>
                   <th className="p-4 text-left text-sm font-semibold">Year</th>
                 <th className="p-4 text-left text-sm font-semibold">Category</th>
@@ -145,15 +145,15 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
               {data.map((item, idx) => {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 return (
-                  <tr key={item.id} className={`border-b transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
-                    <td className="p-4 text-sm font-medium text-gray-900">{item.year}</td>
-                    <td className="p-4 text-sm text-gray-600">{item.category}</td>
-                    <td className="p-4 text-sm text-gray-600">{item.costType}</td>
-                    <td className="p-4 text-sm text-gray-600">{item.serviceSoftware}</td>
-                    <td className="p-4 text-sm text-gray-600">{item.vendor}</td>
-                    <td className="p-4 text-right text-sm font-semibold text-gray-900">{formatCurrency(item.budgetTotal)}</td>
-                    <td className="p-4 text-right text-sm font-semibold text-gray-900">{formatCurrency(item.actualTotal)}</td>
-                    <td className={`p-4 text-right text-sm font-bold ${variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  <tr key={item.id} className={`border-b border-slate-700 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
+                    <td className="p-4 text-sm font-medium text-white">{item.year}</td>
+                    <td className="p-4 text-sm text-slate-300">{item.category}</td>
+                    <td className="p-4 text-sm text-slate-300">{item.costType}</td>
+                    <td className="p-4 text-sm text-slate-300">{item.serviceSoftware}</td>
+                    <td className="p-4 text-sm text-slate-300">{item.vendor}</td>
+                    <td className="p-4 text-right text-sm font-semibold text-white">{formatCurrency(item.budgetTotal)}</td>
+                    <td className="p-4 text-right text-sm font-semibold text-white">{formatCurrency(item.actualTotal)}</td>
+                    <td className={`p-4 text-right text-sm font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
                       {formatCurrency(variance)}
                     </td>
                     <td className="p-4 text-center space-x-2">
@@ -180,22 +180,22 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
         {/* Pagination */}
         {data.length > 0 && (
-        <div className="flex justify-between items-center mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="text-sm font-medium text-gray-600">
-            Page <span className="font-bold text-gray-900">{page}</span> • <span className="font-bold text-gray-900">{data.length}</span> items shown
+        <div className="flex justify-between items-center mt-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+          <div className="text-sm font-medium text-slate-400">
+            Page <span className="font-bold text-white">{page}</span> • <span className="font-bold text-white">{data.length}</span> items shown
           </div>
           <div className="space-x-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
+              className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
             >
               <FaChevronLeft size={14} /> Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={data.length < pageSize}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
+              className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
             >
               Next <FaChevronRight size={14} />
             </button>
