@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaBriefcase, FaCheck, FaTrendingUp, FaTrendingDown, FaChartBar, FaSync } from 'react-icons/fa';
+import { FaBriefcase, FaCheck, FaArrowUp, FaArrowDown, FaChartBar, FaSync } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency, formatPercent } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
@@ -110,9 +110,9 @@ export default function GACostsDashboard({ refreshTrigger }) {
                 </p>
               </div>
               {summary.variance >= 0 ? (
-                <FaTrendingUp className="text-4xl text-green-600 opacity-80" />
+                <FaArrowUp className="text-4xl text-green-600 opacity-80" />
               ) : (
-                <FaTrendingDown className="text-4xl text-red-600 opacity-80" />
+                <FaArrowDown className="text-4xl text-red-600 opacity-80" />
               )}
             </div>
           </div>
