@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
@@ -68,7 +69,9 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
 
       {/* Filters */}
       <div className="card p-6 bg-gradient-to-r from-gray-50 to-white">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">🔍 Filters</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <FaSearch className="text-blue-600" /> Filters
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
@@ -119,7 +122,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       <div className="card overflow-hidden shadow-md">
         {data.length === 0 ? (
           <div className="p-12 text-center">
-            <span className="text-5xl mb-4 block">📭</span>
+            <FaSearch className="text-5xl mb-4 mx-auto text-gray-300" />
             <p className="text-gray-500 text-lg">No G&A costs found. Try adjusting your filters.</p>
           </div>
         ) : (
@@ -156,15 +159,15 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                     <td className="p-4 text-center space-x-2">
                       <button
                         onClick={() => onEdit?.(item)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 font-medium transition-colors"
+                        className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 font-medium transition-colors inline-flex items-center gap-1"
                       >
-                        ✏️ Edit
+                        <FaEdit size={14} /> Edit
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 font-medium transition-colors"
+                        className="px-3 py-1 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 font-medium transition-colors inline-flex items-center gap-1"
                       >
-                        🗑️ Delete
+                        <FaTrash size={14} /> Delete
                       </button>
                     </td>
                   </tr>
@@ -185,16 +188,16 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium"
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
             >
-              ⬅️ Previous
+              <FaChevronLeft size={14} /> Previous
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={data.length < pageSize}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium"
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-2"
             >
-              Next ➡️
+              Next <FaChevronRight size={14} />
             </button>
           </div>
         </div>

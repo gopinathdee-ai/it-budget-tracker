@@ -1,100 +1,55 @@
 ﻿import { useState } from 'react';
-import { AppBar, Toolbar, Container, Button, Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { Dashboard as DashboardIcon, AttachMoney as DashboardCostsIcon } from '@mui/icons-material';
+import { FaChartLine, FaDollarSign } from 'react-icons/fa';
 import Dashboard from './pages/Dashboard';
 import GACosts from './pages/GACosts';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#10b981',
-    },
-    background: {
-      default: '#f9fafb',
-    },
-  },
-  typography: {
-    fontFamily: 'Nunito, sans-serif',
-    h1: {
-      fontWeight: 700,
-    },
-    h2: {
-      fontWeight: 600,
-    },
-  },
-});
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#f9fafb' }}>
-        {/* Navigation */}
-        <AppBar position="sticky">
-          <Toolbar>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
-              <Box sx={{
-                width: 40,
-                height: 40,
-                borderRadius: 1,
-                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-              }}>
-                ₿
-              </Box>
-              <Box sx={{ fontSize: '1.5rem', fontWeight: 700 }}>IT Budget Tracker</Box>
-            </Box>
-            <Button
-              color={currentPage === 'dashboard' ? 'inherit' : 'inherit'}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Navigation */}
+      <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">₿</span>
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              IT Budget Tracker
+            </h1>
+          </div>
+          <div className="flex gap-2">
+            <button
               onClick={() => setCurrentPage('dashboard')}
-              sx={{
-                fontWeight: currentPage === 'dashboard' ? 600 : 500,
-                textTransform: 'none',
-                fontSize: '1rem',
-                mx: 1,
-                pb: 0.5,
-                borderBottom: currentPage === 'dashboard' ? '3px solid white' : 'none',
-                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
-              }}
-              startIcon={<DashboardIcon />}
+              className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                currentPage === 'dashboard'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
             >
-              Dashboard
-            </Button>
-            <Button
-              color={currentPage === 'gacosts' ? 'inherit' : 'inherit'}
+              <FaChartLine /> Dashboard
+            </button>
+            <button
               onClick={() => setCurrentPage('gacosts')}
-              sx={{
-                fontWeight: currentPage === 'gacosts' ? 600 : 500,
-                textTransform: 'none',
-                fontSize: '1rem',
-                mx: 1,
-                pb: 0.5,
-                borderBottom: currentPage === 'gacosts' ? '3px solid white' : 'none',
-                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
-              }}
-              startIcon={<DashboardCostsIcon />}
+              className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                currentPage === 'gacosts'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
             >
-              G&A Costs
-            </Button>
-          </Toolbar>
-        </AppBar>
+              <FaDollarSign /> G&A Costs
+            </button>
+          </div>
+        </div>
+      </nav>
 
-        {/* Page Content */}
-        <Container maxWidth="lg" sx={{ py: 4, flex: 1 }}>
-          {currentPage === 'dashboard' && <Dashboard />}
-          {currentPage === 'gacosts' && <GACosts />}
-        </Container>
-      </Box>
-    </ThemeProvider>
+      {/* Page Content */}
+      <main className="max-w-7xl mx-auto px-6 py-12">
+        {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'gacosts' && <GACosts />}
+      </main>
+    </div>
   );
 }
 
