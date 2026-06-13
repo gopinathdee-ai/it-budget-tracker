@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaFont, FaTimes } from 'react-icons/fa';
 
 const FONTS = [
+  { name: 'Nunito', fontFamily: 'Nunito, sans-serif', value: 'nunito' },
   { name: 'Roboto', fontFamily: 'Roboto, sans-serif', value: 'roboto' },
   { name: 'Inter', fontFamily: 'Inter, sans-serif', value: 'inter' },
   { name: 'Lato', fontFamily: 'Lato, sans-serif', value: 'lato' },
