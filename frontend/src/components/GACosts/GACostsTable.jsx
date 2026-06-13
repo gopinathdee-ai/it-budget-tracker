@@ -171,18 +171,20 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                     <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
                       {formatCurrency(variance)}
                     </td>
-                    <td className="px-3 py-2 text-center space-x-1">
+                    <td className="px-3 py-2 text-center space-x-2">
                       <button
                         onClick={() => onEdit?.(item)}
-                        className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 font-medium transition-colors inline-flex items-center gap-1"
+                        title="Edit"
+                        className="p-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors inline-flex items-center"
                       >
-                        <FaEdit size={12} /> Edit
+                        <FaEdit size={14} />
                       </button>
                       <button
                         onClick={() => handleDeleteClick(item.id)}
-                        className="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 font-medium transition-colors inline-flex items-center gap-1"
+                        title="Delete"
+                        className="p-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors inline-flex items-center"
                       >
-                        <FaTrash size={12} /> Delete
+                        <FaTrash size={14} />
                       </button>
                     </td>
                   </tr>
