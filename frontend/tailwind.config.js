@@ -13,6 +13,7 @@ export default {
         lato: ['Lato', 'sans-serif'],
         segoe: ['Segoe UI', 'sans-serif'],
         jetbrains: ['JetBrains Mono', 'monospace'],
+        caveat: ['Caveat', 'cursive'],
       },
     },
   },

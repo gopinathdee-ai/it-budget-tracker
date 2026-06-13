@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { FaFont, FaTimes } from 'react-icons/fa';
 
 const FONTS = [
-  { name: 'Roboto', className: 'font-roboto', value: 'roboto' },
-  { name: 'Inter', className: 'font-inter', value: 'inter' },
-  { name: 'Lato', className: 'font-lato', value: 'lato' },
-  { name: 'Segoe UI', className: 'font-segoe', value: 'segoe' },
-  { name: 'JetBrains Mono', className: 'font-jetbrains', value: 'jetbrains' }
+  { name: 'Roboto', fontFamily: 'Roboto, sans-serif', value: 'roboto' },
+  { name: 'Inter', fontFamily: 'Inter, sans-serif', value: 'inter' },
+  { name: 'Lato', fontFamily: 'Lato, sans-serif', value: 'lato' },
+  { name: 'Segoe UI', fontFamily: 'Segoe UI, sans-serif', value: 'segoe' },
+  { name: 'JetBrains Mono', fontFamily: 'JetBrains Mono, monospace', value: 'jetbrains' },
+  { name: 'Caveat (Handwriting)', fontFamily: 'Caveat, cursive', value: 'caveat' }
 ];
 
 export default function FontSelector() {
@@ -22,7 +23,7 @@ export default function FontSelector() {
   const applyFont = (fontValue) => {
     const font = FONTS.find(f => f.value === fontValue);
     if (font) {
-      document.documentElement.className = font.className;
+      document.documentElement.style.fontFamily = font.fontFamily;
       localStorage.setItem('selectedFont', fontValue);
       setSelectedFont(fontValue);
     }
@@ -59,11 +60,12 @@ export default function FontSelector() {
                     applyFont(font.value);
                     setShowModal(false);
                   }}
+                  style={{ fontFamily: font.fontFamily }}
                   className={`w-full p-3 rounded-lg text-left transition-all ${
                     selectedFont === font.value
                       ? 'bg-blue-600 text-white font-semibold'
                       : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
-                  } ${font.className}`}
+                  }`}
                 >
                   <span className="text-sm">Sample text with {font.name}</span>
                 </button>
