@@ -23,9 +23,11 @@ export default function FontSelector() {
   const applyFont = (fontValue) => {
     const font = FONTS.find(f => f.value === fontValue);
     if (font) {
-      document.documentElement.style.fontFamily = font.fontFamily;
+      document.documentElement.style.fontFamily = `${font.fontFamily} !important`;
+      document.body.style.fontFamily = `${font.fontFamily} !important`;
       localStorage.setItem('selectedFont', fontValue);
       setSelectedFont(fontValue);
+      console.log('Font applied:', fontValue, font.fontFamily);
     }
   };
 
