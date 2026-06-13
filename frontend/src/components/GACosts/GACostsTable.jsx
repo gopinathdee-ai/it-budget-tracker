@@ -4,6 +4,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
+import Number from '../common/Number.jsx';
 
 const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const COST_TYPES = ['Retained', 'Distributed'];
@@ -155,7 +156,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 return (
                   <tr key={item.id} className={`border-b border-slate-700/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
-                    <td className="px-3 py-2 font-medium text-white">{item.year}</td>
+                    <td className="px-3 py-2 font-medium text-white"><Number>{item.year}</Number></td>
                     <td className="px-3 py-2 text-slate-300">{item.category}</td>
                     <td className="px-3 py-2 text-center" title={item.costType}>
                       {item.costType === 'Retained' ? (
@@ -166,10 +167,10 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
                     </td>
                     <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
                     <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
-                    <td className="px-3 py-2 text-right font-semibold text-white">{formatCurrency(item.budgetTotal)}</td>
-                    <td className="px-3 py-2 text-right font-semibold text-white">{formatCurrency(item.actualTotal)}</td>
+                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.budgetTotal)}</Number></td>
+                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.actualTotal)}</Number></td>
                     <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      {formatCurrency(variance)}
+                      <Number>{formatCurrency(variance)}</Number>
                     </td>
                     <td className="px-3 py-2 text-center space-x-2">
                       <button
@@ -199,7 +200,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
         {data.length > 0 && (
         <div className="flex justify-between items-center mt-4 p-2 bg-slate-800/50 rounded border border-slate-700">
           <div className="text-xs font-medium text-slate-400">
-            Page <span className="font-bold text-white">{page}</span> • <span className="font-bold text-white">{data.length}</span> items
+            Page <span className="font-bold text-white"><Number>{page}</Number></span> • <span className="font-bold text-white"><Number>{data.length}</Number></span> items
           </div>
           <div className="space-x-1">
             <button

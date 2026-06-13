@@ -8,12 +8,6 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Nunito', 'sans-serif'],
-        roboto: ['Roboto', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
-        lato: ['Lato', 'sans-serif'],
-        segoe: ['Segoe UI', 'sans-serif'],
-        jetbrains: ['JetBrains Mono', 'monospace'],
-        caveat: ['Caveat', 'cursive'],
       },
     },
   },

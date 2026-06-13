@@ -4,6 +4,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency, formatPercent } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
+import Number from '../common/Number.jsx';
 
 const YEARS = [2024, 2025, 2026, 2027];
 
@@ -85,7 +86,7 @@ export default function GACostsDashboard({ refreshTrigger }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget</p>
-                <p className="text-xl font-bold text-white truncate">{formatCurrency(summary.totalBudget)}</p>
+                <p className="text-xl font-bold text-white truncate"><Number>{formatCurrency(summary.totalBudget)}</Number></p>
               </div>
               <FaBriefcase className="text-2xl text-blue-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
@@ -94,7 +95,7 @@ export default function GACostsDashboard({ refreshTrigger }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-emerald-300 mb-1 uppercase tracking-wide">Total Actual</p>
-                <p className="text-xl font-bold text-white truncate">{formatCurrency(summary.totalActual)}</p>
+                <p className="text-xl font-bold text-white truncate"><Number>{formatCurrency(summary.totalActual)}</Number></p>
               </div>
               <FaCheck className="text-2xl text-emerald-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
@@ -106,7 +107,7 @@ export default function GACostsDashboard({ refreshTrigger }) {
                   Variance
                 </p>
                 <p className="text-xl font-bold text-white truncate">
-                  {formatCurrency(summary.variance)}
+                  <Number>{formatCurrency(summary.variance)}</Number>
                 </p>
               </div>
               {summary.variance >= 0 ? (
@@ -120,7 +121,7 @@ export default function GACostsDashboard({ refreshTrigger }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-purple-300 mb-1 uppercase tracking-wide">Utilization</p>
-                <p className="text-xl font-bold text-white truncate">{formatPercent(summary.utilization)}</p>
+                <p className="text-xl font-bold text-white truncate"><Number>{formatPercent(summary.utilization)}</Number></p>
               </div>
               <FaChartBar className="text-2xl text-purple-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
@@ -149,12 +150,12 @@ export default function GACostsDashboard({ refreshTrigger }) {
                 return (
                   <tr key={category} className="border-b border-slate-700/50 hover:bg-slate-700/30">
                     <td className="p-2 font-medium text-white">{category}</td>
-                    <td className="p-2 text-right text-slate-300">{formatCurrency(data.budget)}</td>
-                    <td className="p-2 text-right text-slate-300">{formatCurrency(data.actual)}</td>
+                    <td className="p-2 text-right text-slate-300"><Number>{formatCurrency(data.budget)}</Number></td>
+                    <td className="p-2 text-right text-slate-300"><Number>{formatCurrency(data.actual)}</Number></td>
                     <td className={`p-2 text-right font-semibold ${variance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {formatCurrency(variance)}
+                      <Number>{formatCurrency(variance)}</Number>
                     </td>
-                    <td className="p-2 text-right text-slate-300">{formatPercent(utilization)}</td>
+                    <td className="p-2 text-right text-slate-300"><Number>{formatPercent(utilization)}</Number></td>
                   </tr>
                 );
               })}
