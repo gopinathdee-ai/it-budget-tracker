@@ -2,6 +2,7 @@
 import { FaChartLine, FaDollarSign } from 'react-icons/fa';
 import Dashboard from './pages/Dashboard';
 import GACosts from './pages/GACosts';
+import FontSelector from './components/FontSelector';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -17,7 +18,7 @@ function App() {
               IT Budget Tracker
             </h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <button
               onClick={() => setCurrentPage('dashboard')}
               className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
@@ -38,6 +39,9 @@ function App() {
             >
               <FaDollarSign /> G&A Costs
             </button>
+            <div className="ml-4 pl-4 border-l border-slate-700">
+              <FontSelector />
+            </div>
           </div>
         </div>
       </nav>
