@@ -1,52 +1,58 @@
 ﻿import { useState } from 'react';
-import { FaChartLine, FaDollarSign } from 'react-icons/fa';
+import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import GACosts from './pages/GACosts';
+import AdminUsers from './pages/Admin/Users';
+import AdminSettings from './pages/Admin/Settings';
+import AdminAudit from './pages/Admin/Audit';
+import Projects from './pages/Projects';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'gacosts':
+        return <GACosts />;
+      case 'admin-users':
+        return <AdminUsers />;
+      case 'admin-settings':
+        return <AdminSettings />;
+      case 'admin-audit':
+        return <AdminAudit />;
+      case 'projects':
+        return <Projects />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
-      {/* Navigation */}
-      <nav className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="IT Budget Tracker" className="w-10 h-10" />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              IT Budget Tracker
-            </h1>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setCurrentPage('dashboard')}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                currentPage === 'dashboard'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <FaChartLine /> Dashboard
-            </button>
-            <button
-              onClick={() => setCurrentPage('gacosts')}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                currentPage === 'gacosts'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <FaDollarSign /> G&A Costs
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex flex-col">
+      {/* Top Navbar */}
+      <nav className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 shadow-lg sticky top-0 z-40 h-16 flex items-center">
+        <div className="px-6 flex items-center gap-3 h-full">
+          <img src="/logo.png" alt="IT Budget Tracker" className="w-8 h-8" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+            IT Budget Tracker
+          </h1>
         </div>
       </nav>
 
-      {/* Page Content */}
-      <main className="max-w-7xl mx-auto px-6 py-12">
-        {currentPage === 'dashboard' && <Dashboard />}
-        {currentPage === 'gacosts' && <GACosts />}
-      </main>
+      {/* Main Layout */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto px-8 py-8">
+          <div className="max-w-7xl mx-auto">
+            {renderPage()}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
