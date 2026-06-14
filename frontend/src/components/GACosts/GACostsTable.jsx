@@ -10,11 +10,11 @@ const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const COST_TYPES = ['Retained', 'Distributed'];
 const YEARS = [2024, 2025, 2026, 2027];
 
-export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
+export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selectedYear }) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
-  const [filters, setFilters] = useState({ year: '', category: '', costType: '' });
+  const [filters, setFilters] = useState({ year: selectedYear?.toString() || '', category: '', costType: '' });
   const [error, setError] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -37,6 +37,13 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger }) {
       setError('Failed to load G&A costs');
     }
   }, [page, filters, pageSize, request]);
+
+  useEffect(() => {
+    if (selectedYear) {
+      setFilters(prev => ({ ...prev, year: selectedYear.toString() }));
+      setPage(1);
+    }
+  }, [selectedYear]);
 
   useEffect(() => {
     fetchData();

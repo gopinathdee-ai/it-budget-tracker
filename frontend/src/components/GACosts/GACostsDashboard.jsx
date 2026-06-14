@@ -8,15 +8,14 @@ import Number from '../common/Number.jsx';
 
 const YEARS = [2024, 2025, 2026, 2027];
 
-export default function GACostsDashboard({ refreshTrigger }) {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
   const { request, loading } = useApi();
 
   useEffect(() => {
     fetchData();
-  }, [selectedYear, refreshTrigger]);
+  }, [selectedYear, refreshTrigger, request]);
 
   const fetchData = async () => {
     try {
@@ -59,25 +58,8 @@ export default function GACostsDashboard({ refreshTrigger }) {
     <div className="space-y-6">
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-white">G&A Costs Summary</h2>
-        <div className="flex gap-2">
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-4 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
-          </select>
-          <button
-            onClick={fetchData}
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md hover:from-blue-700 hover:to-blue-800 flex items-center gap-2 font-medium transition-all"
-          >
-            <FaSync /> Refresh
-          </button>
-        </div>
-      </div>
+      {/* Title */}
+      <h2 className="text-lg font-bold text-white">G&A Costs Summary</h2>
 
       {/* Summary Cards */}
       {summary && (
