@@ -3,6 +3,7 @@ import { FaPlus, FaSync } from 'react-icons/fa';
 import GACostsTable from '../components/GACosts/GACostsTable.jsx';
 import GACostsForm from '../components/GACosts/GACostsForm.jsx';
 import GACostsDashboard from '../components/GACosts/GACostsDashboard.jsx';
+import GACostsCategoryBreakdown from '../components/GACosts/GACostsCategoryBreakdown.jsx';
 
 export default function GACostsPage() {
   const [showForm, setShowForm] = useState(false);
@@ -24,6 +25,10 @@ export default function GACostsPage() {
   const handleCancel = () => {
     setShowForm(false);
     setSelectedCost(null);
+  };
+
+  const handleDelete = () => {
+    setRefreshKey(k => k + 1);
   };
 
   return (
@@ -81,8 +86,17 @@ export default function GACostsPage() {
         <h2 className="text-lg font-bold mb-3 text-white">G&A Costs List</h2>
         <GACostsTable
           onEdit={handleEdit}
+          onDelete={handleDelete}
           refreshTrigger={refreshKey}
           selectedYear={selectedYear}
+        />
+      </div>
+
+      {/* Category Breakdown */}
+      <div>
+        <GACostsCategoryBreakdown
+          selectedYear={selectedYear}
+          refreshTrigger={refreshKey}
         />
       </div>
     </div>

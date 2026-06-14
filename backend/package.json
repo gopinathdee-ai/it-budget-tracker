@@ -11,8 +11,8 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "migrate:latest": "knex migrate:latest",
-    "seed:mandatory": "knex seed:run --specific=002_mandatory.js",
-    "seed:optional": "knex seed:run --specific=003_optional.js",
+    "seed:mandatory": "knex seed:run --specific=002_mandatory_seed.js",
+    "seed:optional": "knex seed:run --specific=003_optional_seed.js",
     "db:setup": "npm run migrate:latest && npm run seed:mandatory && npm run seed:optional",
     "db:reset": "npm run migrate:rollback --all && npm run migrate:latest && npm run seed:mandatory && npm run seed:optional"
   },

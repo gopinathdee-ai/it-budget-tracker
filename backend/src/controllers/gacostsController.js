@@ -1,6 +1,5 @@
 import { db } from '../server.js';
 
-const VALID_CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const VALID_COST_TYPES = ['Retained', 'Distributed'];
 
 export async function getAll(req, res, next) {
@@ -12,7 +11,7 @@ export async function getAll(req, res, next) {
     let query = db('GACosts').select(
       'GACosts.id',
       'GACosts.year',
-      'GACosts.category',
+      'Categories.name as category',
       'GACosts.costType',
       'GACosts.serviceSoftware',
       'GACosts.vendor',
@@ -28,19 +27,21 @@ export async function getAll(req, res, next) {
       db.raw('COALESCE(GACostsActual.newAmount, 0) as actualNew'),
       db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
     )
+      .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId');
 
     if (year) query = query.where('GACosts.year', parseInt(year));
-    if (category) query = query.where('GACosts.category', category);
+    if (category) query = query.where('Categories.name', category);
     if (costType) query = query.where('GACosts.costType', costType);
 
     const total = await db('GACosts')
       .count('* as count')
+      .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
       .modify(q => {
-        if (year) q.where('year', parseInt(year));
-        if (category) q.where('category', category);
-        if (costType) q.where('costType', costType);
+        if (year) q.where('GACosts.year', parseInt(year));
+        if (category) q.where('Categories.name', category);
+        if (costType) q.where('GACosts.costType', costType);
       });
 
     const data = await query
@@ -78,7 +79,7 @@ export async function getById(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'GACosts.category',
+        'Categories.name as category',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -94,6 +95,7 @@ export async function getById(req, res, next) {
         db.raw('COALESCE(GACostsActual.newAmount, 0) as actualNew'),
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
+      .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();
@@ -121,15 +123,15 @@ export async function getById(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    const { year, category, costType, serviceSoftware, vendor, version, budgetMaintenance, budgetNew } = req.body;
+    const { year, category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew } = req.body;
 
-    const errors = validateGACost({ year, category, costType, serviceSoftware, vendor });
+    const errors = validateGACost({ year, categoryId: category, costType, serviceSoftware, vendor, version, currency });
     if (errors.length > 0) {
       return res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'Validation failed',
+          message: errors.map(e => e.message).join('; '),
           details: errors
         },
         meta: { timestamp: new Date().toISOString() }
@@ -138,12 +140,13 @@ export async function create(req, res, next) {
 
     await db('GACosts').insert({
       year,
-      category,
+      categoryId: category,
       costType,
       serviceSoftware,
       vendor,
-      version: version || null,
-      currencyCode: 'USD',
+      version,
+      subCategoryId: subCategory || null,
+      currencyCode: currency || 'CAD',
       createdByUserId: req.user?.id || null,
       createdAt: db.fn.now(),
       updatedAt: db.fn.now()
@@ -182,7 +185,7 @@ export async function create(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'GACosts.category',
+        'Categories.name as category',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -198,6 +201,7 @@ export async function create(req, res, next) {
         db.raw('COALESCE(GACostsActual.newAmount, 0) as actualNew'),
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
+      .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();
@@ -215,7 +219,7 @@ export async function create(req, res, next) {
 export async function update(req, res, next) {
   try {
     const { id } = req.params;
-    const { category, costType, serviceSoftware, vendor, version, budgetMaintenance, budgetNew } = req.body;
+    const { category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew } = req.body;
 
     const existingCost = await db('GACosts').where('id', id).first();
     if (!existingCost) {
@@ -228,18 +232,7 @@ export async function update(req, res, next) {
 
     const updateData = {};
     if (category !== undefined) {
-      if (!VALID_CATEGORIES.includes(category)) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid category',
-            details: [{ field: 'category', message: `Must be one of: ${VALID_CATEGORIES.join(', ')}` }]
-          },
-          meta: { timestamp: new Date().toISOString() }
-        });
-      }
-      updateData.category = category;
+      updateData.categoryId = category;
     }
     if (costType !== undefined) {
       if (!VALID_COST_TYPES.includes(costType)) {
@@ -258,6 +251,8 @@ export async function update(req, res, next) {
     if (serviceSoftware !== undefined) updateData.serviceSoftware = serviceSoftware;
     if (vendor !== undefined) updateData.vendor = vendor;
     if (version !== undefined) updateData.version = version;
+    if (currency !== undefined) updateData.currencyCode = currency;
+    if (subCategory !== undefined) updateData.subCategoryId = subCategory || null;
     updateData.updatedAt = db.fn.now();
 
     await db('GACosts').where('id', id).update(updateData);
@@ -279,7 +274,7 @@ export async function update(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'GACosts.category',
+        'Categories.name as category',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -295,6 +290,7 @@ export async function update(req, res, next) {
         db.raw('COALESCE(GACostsActual.newAmount, 0) as actualNew'),
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
+      .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();
@@ -341,8 +337,8 @@ function validateGACost(data) {
     errors.push({ field: 'year', message: 'Year must be between 2020-2030' });
   }
 
-  if (!data.category || !VALID_CATEGORIES.includes(data.category)) {
-    errors.push({ field: 'category', message: `Must be one of: ${VALID_CATEGORIES.join(', ')}` });
+  if (!data.categoryId) {
+    errors.push({ field: 'category', message: 'Category is required' });
   }
 
   if (!data.costType || !VALID_COST_TYPES.includes(data.costType)) {
@@ -355,6 +351,14 @@ function validateGACost(data) {
 
   if (!data.vendor || data.vendor.trim().length === 0) {
     errors.push({ field: 'vendor', message: 'Vendor is required' });
+  }
+
+  if (!data.version) {
+    errors.push({ field: 'version', message: 'Major.Minor is required' });
+  }
+
+  if (!data.currency) {
+    errors.push({ field: 'currency', message: 'Currency is required' });
   }
 
   return errors;

@@ -1,10 +1,10 @@
-// src/database/seeds/003_optional.js
+// src/database/seeds/003_optional_seed.js
 // DEVELOPMENT ONLY - DO NOT RUN IN PRODUCTION
 // Creates test users and sample data for testing
 
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
-exports.seed = async function(knex) {
+export async function seed(knex) {
   console.log('');
   console.log('═══════════════════════════════════════════════════════════');
   console.log('🧪 OPTIONAL SEED - DEVELOPMENT TEST DATA');
@@ -280,6 +280,123 @@ exports.seed = async function(knex) {
   console.log(`   ✅ Created ${projects.length} sample projects`);
 
   console.log('');
+  console.log('Step 6: Creating categories and subcategories...');
+
+  // Delete old categories
+  await knex('SubCategories').del();
+  await knex('Categories').del();
+
+  const categories = [
+    {
+      name: 'IT Services',
+      description: 'IT infrastructure and services',
+      displayOrder: 1,
+      isActive: true,
+    },
+    {
+      name: 'Business Apps',
+      description: 'Business applications and software',
+      displayOrder: 2,
+      isActive: true,
+    },
+    {
+      name: 'Other',
+      description: 'Other costs',
+      displayOrder: 3,
+      isActive: true,
+    },
+  ];
+
+  const insertedCategories = await knex('Categories').insert(categories);
+  console.log(`   ✅ Created ${categories.length} categories`);
+
+  const subcategoriesData = [
+    // IT Services subcategories
+    {
+      categoryId: insertedCategories[0],
+      name: 'Infrastructure Services',
+      description: 'Cloud, data center, and network infrastructure',
+      displayOrder: 1,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[0],
+      name: 'Cyber Security Services',
+      description: 'Security, identity management, and threat protection',
+      displayOrder: 2,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[0],
+      name: 'Network Services',
+      description: 'Network infrastructure and connectivity',
+      displayOrder: 3,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[0],
+      name: 'Database Services',
+      description: 'Database administration and support',
+      displayOrder: 4,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[0],
+      name: 'Help Desk & Support',
+      description: 'User support and IT helpdesk',
+      displayOrder: 5,
+      isActive: true,
+    },
+    // Business Apps subcategories
+    {
+      categoryId: insertedCategories[1],
+      name: 'Enterprise Applications',
+      description: 'Large enterprise systems (ERP, CRM, etc)',
+      displayOrder: 1,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[1],
+      name: 'Productivity Software',
+      description: 'Microsoft 365, Google Workspace, etc',
+      displayOrder: 2,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[1],
+      name: 'Specialized Applications',
+      description: 'Industry-specific or specialized tools',
+      displayOrder: 3,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[1],
+      name: 'Development Tools',
+      description: 'Development platforms and tools',
+      displayOrder: 4,
+      isActive: true,
+    },
+    // Other subcategories
+    {
+      categoryId: insertedCategories[2],
+      name: 'Software Licenses',
+      description: 'Various software licenses and maintenance',
+      displayOrder: 1,
+      isActive: true,
+    },
+    {
+      categoryId: insertedCategories[2],
+      name: 'Hardware & Equipment',
+      description: 'Hardware purchases and maintenance',
+      displayOrder: 2,
+      isActive: true,
+    },
+  ];
+
+  await knex('SubCategories').insert(subcategoriesData);
+  console.log(`   ✅ Created ${subcategoriesData.length} subcategories`);
+
+  console.log('');
   console.log('Step 5: Creating project budgets and actuals...');
 
   let projectCount = 0;
@@ -335,8 +452,9 @@ exports.seed = async function(knex) {
   console.log(`  • ${testUsers.length} test users created`);
   console.log(`  • ${gaCosts.length} sample G&A costs`);
   console.log(`  • ${projects.length} sample projects`);
+  console.log(`  • ${categories.length} cost categories with ${subcategoriesData.length} subcategories`);
   console.log(`  • All with realistic budgeted vs actual costs`);
   console.log('');
   console.log('Ready to test the application! 🧪');
   console.log('');
-};
+}

@@ -4,6 +4,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
+import ConfirmDialog from '../common/ConfirmDialog.jsx';
 import Number from '../common/Number.jsx';
 
 const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
@@ -229,31 +230,14 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 rounded-lg shadow-xl max-w-sm w-full border border-slate-700 p-6">
-            <h3 className="text-lg font-bold text-white mb-2">Delete G&A Cost?</h3>
-            <p className="text-slate-300 text-sm mb-6">This action cannot be undone. Are you sure?</p>
-            <div className="flex gap-3">
-              <button
-                onClick={handleConfirmDelete}
-                disabled={deleting}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded hover:from-red-700 hover:to-red-800 disabled:opacity-50 font-medium transition-all"
-              >
-                {deleting ? 'Deleting...' : 'Delete'}
-              </button>
-              <button
-                onClick={() => setDeleteConfirm(null)}
-                disabled={deleting}
-                className="flex-1 px-4 py-2 bg-slate-700 text-slate-200 rounded hover:bg-slate-600 disabled:opacity-50 font-medium transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        isOpen={!!deleteConfirm}
+        title="Delete G&A Cost"
+        message="This action cannot be undone. Are you sure you want to delete this cost?"
+        isDangerous={true}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteConfirm(null)}
+      />
     </div>
   );
 }

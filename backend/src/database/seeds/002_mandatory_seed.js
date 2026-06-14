@@ -1,11 +1,11 @@
-// src/database/seeds/002_mandatory.js
+// src/database/seeds/002_mandatory_seed.js
 // IMPORTANT: This seed runs in PRODUCTION
 // Only includes essential master data and admin users
 // NO test data or sample data here
 
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
 
-exports.seed = async function(knex) {
+export async function seed(knex) {
   console.log('');
   console.log('═══════════════════════════════════════════════════════════');
   console.log('🔐 MANDATORY SEED - PRODUCTION CRITICAL DATA');
@@ -75,7 +75,40 @@ exports.seed = async function(knex) {
   console.log(`   ✅ Created ${permissions.length} role-based permissions`);
 
   console.log('');
-  console.log('Step 3: Creating glassbreak admin user...');
+  console.log('Step 3: Creating admin user...');
+
+  // Create primary admin user
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
+  const adminHash = await bcrypt.hash(adminPassword, 10);
+
+  const adminUser = {
+    email: 'admin@local',
+    username: 'admin',
+    passwordHash: adminHash,
+    role: 'Admin',
+    isActive: true,
+  };
+
+  try {
+    // Check if admin user already exists
+    const existing = await knex('Users')
+      .where({ email: adminUser.email })
+      .first();
+
+    if (!existing) {
+      await knex('Users').insert(adminUser);
+      console.log('   ✅ Created admin user');
+      console.log(`      Email: ${adminUser.email}`);
+      console.log(`      Password: ${adminPassword}`);
+    } else {
+      console.log('   ℹ️  Admin user already exists');
+    }
+  } catch (error) {
+    console.error('   ❌ Error creating admin user:', error.message);
+  }
+
+  console.log('');
+  console.log('Step 4: Creating glassbreak admin user...');
 
   // Create glassbreak admin user (emergency access)
   // This is a "break glass" admin account for emergencies
@@ -109,25 +142,41 @@ exports.seed = async function(knex) {
   }
 
   console.log('');
-  console.log('Step 4: Creating currencies master data...');
+  console.log('Step 5: Creating base currency (CAD)...');
 
-  // Insert currency reference data
-  // This is used for multi-currency budget tracking
-  const currencies = [
-    { code: 'USD', name: 'US Dollar', conversionRate: 1.0, baseCurrency: 'USD' },
-    { code: 'CAD', name: 'Canadian Dollar', conversionRate: 0.73, baseCurrency: 'USD' },
-    { code: 'EUR', name: 'Euro', conversionRate: 1.08, baseCurrency: 'USD' },
-    { code: 'GBP', name: 'British Pound', conversionRate: 1.27, baseCurrency: 'USD' },
-    { code: 'JPY', name: 'Japanese Yen', conversionRate: 0.0067, baseCurrency: 'USD' },
+  // Insert mandatory base currency (CAD only)
+  // Other currencies should be added via the Admin Settings UI
+  const baseCurrency = { code: 'CAD', name: 'Canadian Dollar', conversionRate: 1.0, baseCurrency: 'CAD' };
+
+  try {
+    // Check if CAD already exists
+    const existing = await knex('Currencies').where({ code: 'CAD' }).first();
+
+    if (!existing) {
+      await knex('Currencies').insert(baseCurrency);
+      console.log(`   ✅ Inserted base currency: CAD`);
+    } else {
+      console.log(`   ℹ️  Base currency CAD already exists`);
+    }
+  } catch (error) {
+    console.error('   ❌ Error inserting base currency:', error.message);
+  }
+
+  console.log('');
+  console.log('Step 6: Setting system-level app settings...');
+
+  // Insert system-level settings (theme, etc.)
+  const appSettings = [
+    { setting: 'theme', value: 'dark-blue' }
   ];
 
   try {
-    // Delete and re-insert to keep up-to-date conversion rates
-    await knex('Currencies').del();
-    await knex('Currencies').insert(currencies);
-    console.log(`   ✅ Inserted ${currencies.length} currencies`);
+    // Delete existing settings and re-insert to ensure fresh state
+    await knex('AppSettings').del();
+    await knex('AppSettings').insert(appSettings);
+    console.log(`   ✅ Initialized ${appSettings.length} app settings`);
   } catch (error) {
-    console.error('   ❌ Error inserting currencies:', error.message);
+    console.error('   ❌ Error setting app settings:', error.message);
   }
 
   console.log('');
@@ -149,4 +198,4 @@ exports.seed = async function(knex) {
   console.log('4. Change password after first login');
   console.log('');
   console.log('═══════════════════════════════════════════════════════════');
-};
+}

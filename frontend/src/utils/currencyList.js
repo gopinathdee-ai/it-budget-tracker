@@ -1,0 +1,23 @@
+// Standard ISO 4217 currency codes and names
+export const AVAILABLE_CURRENCIES = [
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'British Pound' },
+  { code: 'JPY', name: 'Japanese Yen' },
+  { code: 'AUD', name: 'Australian Dollar' },
+  { code: 'NZD', name: 'New Zealand Dollar' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'CNY', name: 'Chinese Yuan' },
+  { code: 'INR', name: 'Indian Rupee' },
+  { code: 'SGD', name: 'Singapore Dollar' },
+  { code: 'HKD', name: 'Hong Kong Dollar' },
+  { code: 'MXN', name: 'Mexican Peso' },
+  { code: 'BRL', name: 'Brazilian Real' },
+  { code: 'ZAR', name: 'South African Rand' },
+  { code: 'SEK', name: 'Swedish Krona' },
+  { code: 'NOK', name: 'Norwegian Krone' },
+  { code: 'KRW', name: 'South Korean Won' },
+  { code: 'THB', name: 'Thai Baht' },
+  { code: 'MYR', name: 'Malaysian Ringgit' },
+];

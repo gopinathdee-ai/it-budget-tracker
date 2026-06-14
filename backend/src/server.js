@@ -74,11 +74,17 @@ app.get('/api/info', (req, res) => {
 
 // ===== Routes =====
 import gaCostsRoutes from './routes/gacosts.js';
+import categoriesRoutes from './routes/categories.js';
+import configRoutes from './routes/config.js';
+import settingsRoutes from './routes/settings.js';
 // import authRoutes from './routes/auth.js';
 // import projectsRoutes from './routes/projects.js';
 // import dashboardRoutes from './routes/dashboard.js';
 
 app.use('/api/gacosts', gaCostsRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/config', configRoutes);
+app.use('/api/settings', settingsRoutes);
 // app.use('/api/auth', authRoutes);
 // app.use('/api/projects', projectsRoutes);
 // app.use('/api/dashboard', dashboardRoutes);

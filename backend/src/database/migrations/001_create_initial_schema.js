@@ -30,17 +30,17 @@ export const up = async function(knex) {
     .createTable('GACosts', (table) => {
       table.increments('id').primary();
       table.integer('year').notNullable();
-      table.enum('category', ['Business Apps', 'IT Services', 'Other']).notNullable();
+      table.integer('categoryId').unsigned();
+      table.integer('subCategoryId').unsigned();
       table.enum('costType', ['Retained', 'Distributed']).notNullable();
       table.string('serviceSoftware', 255).notNullable();
       table.string('vendor', 255).notNullable();
       table.string('version', 50);
-      table.string('currencyCode', 3).defaultTo('USD');
+      table.string('currencyCode', 3).defaultTo('CAD');
       table.decimal('forecastComplete', 12, 2);
       table.integer('createdByUserId').unsigned();
       table.timestamp('createdAt').defaultTo(knex.fn.now());
       table.timestamp('updatedAt').defaultTo(knex.fn.now());
-      table.index(['year', 'category']);
       table.index(['year', 'costType']);
       table.foreign('createdByUserId').references('Users.id');
     })

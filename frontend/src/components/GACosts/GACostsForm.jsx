@@ -3,7 +3,6 @@ import { useApi } from '../../hooks/useApi.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
 
-const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const COST_TYPES = ['Retained', 'Distributed'];
 const YEARS = [2024, 2025, 2026, 2027];
 
@@ -11,6 +10,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
     year: new Date().getFullYear().toString(),
     category: '',
+    subCategory: '',
+    currency: 'CAD',
     costType: '',
     serviceSoftware: '',
     vendor: '',
@@ -20,13 +21,57 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [currencies, setCurrencies] = useState([]);
+  const [majorMinors, setMajorMinors] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
   const { request, loading } = useApi();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoadingData(true);
+        const [catsRes, currRes, mmRes] = await Promise.all([
+          request('GET', '/api/categories'),
+          request('GET', '/api/config/currencies'),
+          request('GET', '/api/config/majorminor')
+        ]);
+        setCategories(catsRes.data || []);
+        setCurrencies(currRes.data || []);
+        setMajorMinors(mmRes.data || []);
+      } catch (err) {
+        setError('Failed to load form data');
+      } finally {
+        setLoadingData(false);
+      }
+    };
+    fetchData();
+  }, [request]);
+
+  useEffect(() => {
+    if (formData.category && categories.length > 0) {
+      const fetchSubs = async () => {
+        try {
+          const res = await request('GET', `/api/categories/${formData.category}/subcategories`);
+          setSubcategories(res.data || []);
+        } catch (err) {
+          setSubcategories([]);
+        }
+      };
+      fetchSubs();
+    } else {
+      setSubcategories([]);
+    }
+  }, [formData.category, categories, request]);
 
   useEffect(() => {
     if (cost) {
       setFormData({
         year: cost.year || '',
         category: cost.category || '',
+        subCategory: cost.subCategory || '',
+        currency: cost.currency || 'CAD',
         costType: cost.costType || '',
         serviceSoftware: cost.serviceSoftware || '',
         vendor: cost.vendor || '',
@@ -45,6 +90,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
     if (!formData.costType) newErrors.costType = 'Cost Type is required';
     if (!formData.serviceSoftware.trim()) newErrors.serviceSoftware = 'Service/Software is required';
     if (!formData.vendor.trim()) newErrors.vendor = 'Vendor is required';
+    if (!formData.version) newErrors.version = 'Major.Minor is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,10 +105,12 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
       const payload = {
         year: parseInt(formData.year),
         category: formData.category,
+        subCategory: formData.subCategory || null,
+        currency: formData.currency,
         costType: formData.costType,
         serviceSoftware: formData.serviceSoftware.trim(),
         vendor: formData.vendor.trim(),
-        version: formData.version.trim() || undefined,
+        version: formData.version,
         budgetMaintenance: formData.budgetMaintenance ? parseFloat(formData.budgetMaintenance) : 0,
         budgetNew: formData.budgetNew ? parseFloat(formData.budgetNew) : 0
       };
@@ -87,84 +135,58 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 bg-slate-800 p-6 rounded-lg max-h-screen overflow-y-auto">
-      <h2 className="text-xl font-bold mb-4 text-white sticky top-0 bg-slate-800 pb-2">
-        {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
-      </h2>
+      <div className="flex justify-between items-center mb-4 sticky top-0 bg-slate-800 pb-2">
+        <h2 className="text-xl font-bold text-white">
+          {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
+        </h2>
+        <select
+          name="year"
+          value={formData.year}
+          onChange={handleChange}
+          className={`w-32 px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.year ? 'border-red-500' : 'border-slate-600'}`}
+        >
+          <option value="">Select Year</option>
+          {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+        </select>
+      </div>
+      {errors.year && <p className="mt-1 text-sm text-red-400">{errors.year}</p>}
 
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
-      {loading && <LoadingSpinner message="Saving..." />}
+      {(loading || loadingData) && <LoadingSpinner message={loading ? "Saving..." : "Loading form data..."} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Year */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Year *</label>
-          <select
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.year ? 'border-red-500' : 'border-slate-600'}`}
-          >
-            <option value="">Select Year</option>
-            {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
-          </select>
-          {errors.year && <p className="mt-1 text-sm text-red-400">{errors.year}</p>}
-        </div>
-
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-1">Category *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Category *</label>
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
+            disabled={loadingData}
             className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Category</option>
-            {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+            {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
           </select>
           {errors.category && <p className="mt-1 text-sm text-red-400">{errors.category}</p>}
         </div>
 
-        {/* Cost Type */}
+        {/* Sub Category */}
         <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Cost Type *</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">
+            Sub Category {subcategories.length > 0 ? '*' : ''}
+          </label>
           <select
-            name="costType"
-            value={formData.costType}
+            name="subCategory"
+            value={formData.subCategory}
             onChange={handleChange}
-            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costType ? 'border-red-500' : 'border-slate-600'}`}
+            disabled={!formData.category || subcategories.length === 0}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.subCategory ? 'border-red-500' : 'border-slate-600'}`}
           >
-            <option value="">Select Type</option>
-            {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
+            <option value="">Select Sub Category</option>
+            {subcategories.map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
           </select>
-          {errors.costType && <p className="mt-1 text-sm text-red-400">{errors.costType}</p>}
-        </div>
-
-        {/* Version */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Version</label>
-          <input
-            type="text"
-            name="version"
-            value={formData.version}
-            onChange={handleChange}
-            placeholder="e.g., 2.1.0"
-            className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Service/Software */}
-        <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Service/Software *</label>
-          <input
-            type="text"
-            name="serviceSoftware"
-            value={formData.serviceSoftware}
-            onChange={handleChange}
-            placeholder="e.g., Microsoft Office 365"
-            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceSoftware ? 'border-red-500' : 'border-slate-600'}`}
-          />
-          {errors.serviceSoftware && <p className="mt-1 text-sm text-red-400">{errors.serviceSoftware}</p>}
+          {errors.subCategory && <p className="mt-1 text-sm text-red-400">{errors.subCategory}</p>}
         </div>
 
         {/* Vendor */}
@@ -181,9 +203,54 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           {errors.vendor && <p className="mt-1 text-sm text-red-400">{errors.vendor}</p>}
         </div>
 
-        {/* Budget Maintenance */}
+        {/* Service/Software */}
         <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Budget - Maintenance</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Software *</label>
+          <input
+            type="text"
+            name="serviceSoftware"
+            value={formData.serviceSoftware}
+            onChange={handleChange}
+            placeholder="e.g., Microsoft Office 365"
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceSoftware ? 'border-red-500' : 'border-slate-600'}`}
+          />
+          {errors.serviceSoftware && <p className="mt-1 text-sm text-red-400">{errors.serviceSoftware}</p>}
+        </div>
+
+        {/* Major.Minor (Version) */}
+        <div>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Major.Minor *</label>
+          <select
+            name="version"
+            value={formData.version}
+            onChange={handleChange}
+            disabled={loadingData}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.version ? 'border-red-500' : 'border-slate-600'}`}
+          >
+            <option value="">Select Major.Minor</option>
+            {majorMinors.map(mm => <option key={mm.id} value={mm.code}>{mm.code} {mm.description ? `- ${mm.description}` : ''}</option>)}
+          </select>
+          {errors.version && <p className="mt-1 text-sm text-red-400">{errors.version}</p>}
+        </div>
+
+        {/* Currency */}
+        <div>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Currency *</label>
+          <select
+            name="currency"
+            value={formData.currency}
+            onChange={handleChange}
+            disabled={loadingData}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.currency ? 'border-red-500' : 'border-slate-600'}`}
+          >
+            {currencies.map(curr => <option key={curr.code} value={curr.code}>{curr.code} - {curr.name}</option>)}
+          </select>
+          {errors.currency && <p className="mt-1 text-sm text-red-400">{errors.currency}</p>}
+        </div>
+
+        {/* Software Maintenance */}
+        <div>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Software Maintenance</label>
           <input
             type="number"
             name="budgetMaintenance"
@@ -196,9 +263,9 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           />
         </div>
 
-        {/* Budget New */}
+        {/* New License */}
         <div>
-          <label className="block text-sm font-semibold text-slate-200 mb-2">Budget - New</label>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">New License</label>
           <input
             type="number"
             name="budgetNew"
@@ -209,6 +276,21 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             min="0"
             className="w-full px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+
+        {/* Type (Cost Type) */}
+        <div>
+          <label className="block text-sm font-semibold text-slate-200 mb-2">Type *</label>
+          <select
+            name="costType"
+            value={formData.costType}
+            onChange={handleChange}
+            className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costType ? 'border-red-500' : 'border-slate-600'}`}
+          >
+            <option value="">Select Type</option>
+            {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
+          </select>
+          {errors.costType && <p className="mt-1 text-sm text-red-400">{errors.costType}</p>}
         </div>
       </div>
 
