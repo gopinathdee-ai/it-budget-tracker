@@ -87,7 +87,7 @@ export default function ManageCurrency() {
     <div className="space-y-6">
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-8">
+      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
         <h2 className="text-xl font-semibold text-white mb-6">Manage Currency Conversions</h2>
         <p className="text-slate-400 mb-6">Add currencies and update conversion rates for multi-currency support (base: CAD)</p>
 
@@ -97,7 +97,7 @@ export default function ManageCurrency() {
           </div>
         )}
 
-        <div className="bg-slate-900/50 p-6 rounded-lg border border-slate-700 mb-8">
+        <div className="bg-slate-900/50 p-6 rounded-lg shadow-sm mb-8">
           <h3 className="text-lg font-semibold text-white mb-4">Add New Currency</h3>
           <form onSubmit={handleAddCurrency} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -106,7 +106,7 @@ export default function ManageCurrency() {
                 <select
                   value={selectedCurrency}
                   onChange={(e) => setSelectedCurrency(e.target.value)}
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Choose a currency...</option>
                   {AVAILABLE_CURRENCIES.map(curr => (
@@ -123,7 +123,7 @@ export default function ManageCurrency() {
                   value={newRate}
                   onChange={(e) => setNewRate(e.target.value)}
                   placeholder="e.g., 1.37 for USD"
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 bg-slate-800 border border-slate-700/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   step="0.0001"
                 />
               </div>
@@ -144,7 +144,7 @@ export default function ManageCurrency() {
             <p className="text-slate-400 text-center py-8">No currencies found</p>
           ) : (
             currencies.map(curr => (
-              <div key={curr.code} className="flex items-center justify-between p-4 bg-slate-900/50 border border-slate-700 rounded-lg hover:bg-slate-900 transition-all">
+              <div key={curr.code} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
                 {editingCode === curr.code ? (
                   <div className="flex gap-2 flex-1 items-center">
                     <span className="text-white font-bold w-16">{curr.code}</span>
@@ -154,7 +154,7 @@ export default function ManageCurrency() {
                       value={editValue}
                       onChange={(e) => setEditValue(e.target.value)}
                       placeholder="Conversion rate"
-                      className="w-32 px-3 py-1 bg-slate-800 border border-slate-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-32 px-3 py-1 bg-slate-800 border border-slate-700/40 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       step="0.0001"
                       autoFocus
                     />

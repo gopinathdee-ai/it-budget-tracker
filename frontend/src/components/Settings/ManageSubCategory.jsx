@@ -112,7 +112,7 @@ export default function ManageSubCategory() {
       />
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-8">
+      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
         <h2 className="text-xl font-semibold text-white mb-6">Select Category</h2>
 
         {categories.length === 0 ? (
@@ -122,7 +122,7 @@ export default function ManageSubCategory() {
             <select
               value={selectedCategory || ''}
               onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
-              className="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
+              className="w-full px-4 py-2 bg-slate-900 border border-slate-700/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
             >
               {categories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -140,7 +140,7 @@ export default function ManageSubCategory() {
                       value={newSubCategory}
                       onChange={(e) => setNewSubCategory(e.target.value)}
                       placeholder={`Enter subcategory name (e.g., Infrastructure Services, Cyber Security Services)`}
-                      className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 px-4 py-2 bg-slate-900 border border-slate-700/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                       type="submit"
@@ -163,14 +163,14 @@ export default function ManageSubCategory() {
                       <p className="text-slate-400 text-center py-8">No subcategories yet.</p>
                     ) : (
                       subcategories.map(subcat => (
-                        <div key={subcat.id} className="flex items-center justify-between p-4 bg-slate-900/50 border border-slate-700 rounded-lg hover:bg-slate-900 transition-all">
+                        <div key={subcat.id} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
                           {editingId === subcat.id ? (
                             <div className="flex gap-2 flex-1">
                               <input
                                 type="text"
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="flex-1 px-3 py-1 bg-slate-800 border border-slate-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="flex-1 px-3 py-1 bg-slate-800 border border-slate-700/40 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 autoFocus
                               />
                               <button

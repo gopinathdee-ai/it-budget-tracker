@@ -24,19 +24,19 @@ export default function Sidebar({ currentPage, onNavigate, currentTheme }) {
   const getSidebarClasses = () => {
     switch (currentTheme) {
       case 'dark-blue':
-        return 'bg-gradient-to-b from-slate-900 to-slate-800 border-r border-slate-700';
+        return 'bg-gradient-to-b from-slate-900 to-slate-800';
       case 'dark-indigo':
-        return 'bg-gradient-to-b from-indigo-900 to-indigo-800 border-r border-indigo-700';
+        return 'bg-gradient-to-b from-indigo-900 to-indigo-800';
       case 'dark-cyan':
-        return 'bg-gradient-to-b from-slate-900 to-slate-800 border-r border-cyan-700';
+        return 'bg-gradient-to-b from-slate-900 to-slate-800';
       case 'dark-emerald':
-        return 'bg-gradient-to-b from-slate-900 to-slate-800 border-r border-emerald-700';
+        return 'bg-gradient-to-b from-slate-900 to-slate-800';
       case 'light-clean':
-        return 'bg-gradient-to-b from-slate-50 to-white border-r border-slate-200';
+        return 'bg-gradient-to-b from-slate-50 to-white';
       case 'dark-amber':
-        return 'bg-gradient-to-b from-slate-900 to-slate-800 border-r border-orange-700';
+        return 'bg-gradient-to-b from-slate-900 to-slate-800';
       default:
-        return 'bg-gradient-to-b from-slate-900 to-slate-800 border-r border-slate-700';
+        return 'bg-gradient-to-b from-slate-900 to-slate-800';
     }
   };
 
@@ -102,7 +102,7 @@ export default function Sidebar({ currentPage, onNavigate, currentTheme }) {
   };
 
   return (
-    <aside className={`w-64 h-screen overflow-y-auto sticky top-0 ${getSidebarClasses()}`}>
+    <aside className={`w-64 h-screen overflow-y-auto ${getSidebarClasses()} shadow-xl`}>
       {/* Menu Items */}
       <nav className="p-4 space-y-1">
         {MENU_ITEMS.map(item => {
@@ -142,13 +142,7 @@ export default function Sidebar({ currentPage, onNavigate, currentTheme }) {
 
               {/* Submenu Items */}
               {item.submenu && isExpanded && (
-                <div className={`ml-4 mt-1 space-y-1 border-l pl-3 ${
-                  currentTheme === 'light-clean' ? 'border-slate-300' :
-                  currentTheme === 'dark-indigo' ? 'border-indigo-700' :
-                  currentTheme === 'dark-cyan' ? 'border-cyan-700' :
-                  currentTheme === 'dark-emerald' ? 'border-emerald-700' :
-                  currentTheme === 'dark-amber' ? 'border-orange-700' : 'border-slate-700'
-                }`}>
+                <div className="ml-4 mt-1 space-y-1 pl-3">
                   {item.submenu.map(subitem => (
                     <button
                       key={subitem.id}

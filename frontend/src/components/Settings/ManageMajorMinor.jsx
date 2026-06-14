@@ -104,7 +104,7 @@ export default function ManageMajorMinor() {
       />
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-8">
+      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
         <h2 className="text-xl font-semibold text-white mb-6">Add New Major.Minor Code</h2>
 
         <form onSubmit={handleAddMajorMinor} className="flex gap-3 mb-6">
@@ -113,14 +113,14 @@ export default function ManageMajorMinor() {
             value={newCode}
             onChange={(e) => setNewCode(e.target.value)}
             placeholder="Major.Minor code (e.g., 10000.50000)"
-            className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 bg-slate-900 border border-slate-700/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}
             placeholder="Description (optional)"
-            className="flex-1 px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 bg-slate-900 border border-slate-700/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
@@ -143,14 +143,14 @@ export default function ManageMajorMinor() {
             <p className="text-slate-400 text-center py-8">No Major.Minor codes yet. Add one to get started!</p>
           ) : (
             majorMinors.map(mm => (
-              <div key={mm.id} className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg hover:bg-slate-900 transition-all">
+              <div key={mm.id} className="p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
                 {editingId === mm.id ? (
                   <div className="space-y-3">
                     <input
                       type="text"
                       value={editCode}
                       onChange={(e) => setEditCode(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700/40 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       autoFocus
                     />
                     <input
@@ -158,7 +158,7 @@ export default function ManageMajorMinor() {
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
                       placeholder="Description"
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700/40 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <div className="flex gap-2">
                       <button

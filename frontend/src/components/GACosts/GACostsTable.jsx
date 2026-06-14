@@ -96,7 +96,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
             <select
               value={filters.year}
               onChange={(e) => handleFilterChange('year', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Years</option>
               {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
@@ -108,7 +108,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
             <select
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Categories</option>
               {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -120,7 +120,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
             <select
               value={filters.costType}
               onChange={(e) => handleFilterChange('costType', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-600 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Types</option>
               {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
@@ -206,7 +206,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
 
         {/* Pagination */}
         {data.length > 0 && (
-        <div className="flex justify-between items-center mt-4 p-2 bg-slate-800/50 rounded border border-slate-700">
+        <div className="flex justify-between items-center mt-4 p-2 bg-slate-800/50 rounded shadow-sm">
           <div className="text-xs font-medium text-slate-400">
             Page <span className="font-bold text-white"><Number>{page}</Number></span> • <span className="font-bold text-white"><Number>{data.length}</Number></span> items
           </div>

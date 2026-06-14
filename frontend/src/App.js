@@ -57,19 +57,19 @@ function App() {
   const getNavbarClasses = () => {
     switch (currentTheme) {
       case 'dark-blue':
-        return 'bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700';
+        return 'bg-gradient-to-r from-slate-900 to-slate-800';
       case 'dark-indigo':
-        return 'bg-gradient-to-r from-indigo-900 to-indigo-800 border-b border-indigo-700';
+        return 'bg-gradient-to-r from-indigo-900 to-indigo-800';
       case 'dark-cyan':
-        return 'bg-gradient-to-r from-slate-900 to-slate-800 border-b border-cyan-700';
+        return 'bg-gradient-to-r from-slate-900 to-slate-800';
       case 'dark-emerald':
-        return 'bg-gradient-to-r from-slate-900 to-slate-800 border-b border-emerald-700';
+        return 'bg-gradient-to-r from-slate-900 to-slate-800';
       case 'light-clean':
-        return 'bg-gradient-to-r from-white to-slate-50 border-b border-slate-200';
+        return 'bg-gradient-to-r from-white to-slate-50';
       case 'dark-amber':
-        return 'bg-gradient-to-r from-slate-900 to-slate-800 border-b border-orange-700';
+        return 'bg-gradient-to-r from-slate-900 to-slate-800';
       default:
-        return 'bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700';
+        return 'bg-gradient-to-r from-slate-900 to-slate-800';
     }
   };
 
@@ -95,7 +95,7 @@ function App() {
   return (
     <div className={`min-h-screen flex flex-col ${getContainerClasses()}`}>
       {/* Top Navbar */}
-      <nav className={`${getNavbarClasses()} shadow-lg sticky top-0 z-40 h-16 flex items-center`}>
+      <nav className={`${getNavbarClasses()} shadow-xl sticky top-0 z-40 h-16 flex items-center`}>
         <div className="px-6 flex items-center gap-3 h-full">
           <img src="/logo.png" alt="IT Budget Tracker" className="w-8 h-8" />
           <h1 className={`text-2xl font-bold bg-gradient-to-r ${getAccentClasses()} bg-clip-text text-transparent`}>
@@ -105,7 +105,7 @@ function App() {
       </nav>
 
       {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden gap-0">
         {/* Sidebar */}
         <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} currentTheme={currentTheme} />
 
