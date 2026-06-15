@@ -95,7 +95,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
   const getConversionRate = (currency) => {
     if (currency === 'CAD') return 1;
     const curr = currencies.find(c => c.code === currency);
-    return curr?.conversionRateToCAD || 1;
+    return curr?.conversionRate || 1;
   };
 
   if (loading && data.length === 0) return <LoadingSpinner message="Loading G&A costs..." />;
