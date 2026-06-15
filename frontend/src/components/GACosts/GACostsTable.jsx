@@ -19,7 +19,20 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
   const [error, setError] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [currencies, setCurrencies] = useState([]);
   const { request, loading } = useApi();
+
+  useEffect(() => {
+    const fetchCurrencies = async () => {
+      try {
+        const response = await request('GET', '/api/config/currencies');
+        setCurrencies(response.data || []);
+      } catch (err) {
+        console.error('Failed to load currencies');
+      }
+    };
+    fetchCurrencies();
+  }, [request]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -77,6 +90,12 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
     } finally {
       setDeleting(false);
     }
+  };
+
+  const getConversionRate = (currency) => {
+    if (currency === 'CAD') return 1;
+    const curr = currencies.find(c => c.code === currency);
+    return curr?.conversionRateToCAD || 1;
   };
 
   if (loading && data.length === 0) return <LoadingSpinner message="Loading G&A costs..." />;
@@ -148,37 +167,41 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
             <table className="w-full text-xs">
               <thead className="bg-gradient-to-r from-slate-900/80 to-slate-800/80 text-white sticky top-0 backdrop-blur-sm">
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold">Year</th>
-                <th className="px-3 py-2 text-left font-semibold">Category</th>
-                <th className="px-3 py-2 text-left font-semibold">Type</th>
-                <th className="px-3 py-2 text-left font-semibold">Service/Software</th>
-                <th className="px-3 py-2 text-left font-semibold">Vendor</th>
-                <th className="px-3 py-2 text-right font-semibold">Budget</th>
-                <th className="px-3 py-2 text-right font-semibold">Actual</th>
-                <th className="px-3 py-2 text-right font-semibold">Variance</th>
-                <th className="px-3 py-2 text-center font-semibold">Actions</th>
-              </tr>
-            </thead>
+                  <th className="px-3 py-2 text-left font-semibold">Category</th>
+                  <th className="px-3 py-2 text-left font-semibold">Vendor</th>
+                  <th className="px-3 py-2 text-left font-semibold">Service/Software</th>
+                  <th className="px-3 py-2 text-center font-semibold">Currency</th>
+                  <th className="px-3 py-2 text-right font-semibold">Budget</th>
+                  <th className="px-3 py-2 text-right font-semibold">Budget (CAD)</th>
+                  <th className="px-3 py-2 text-right font-semibold">Actual</th>
+                  <th className="px-3 py-2 text-right font-semibold">Variance</th>
+                  <th className="px-3 py-2 text-center font-semibold">Type</th>
+                  <th className="px-3 py-2 text-center font-semibold">Actions</th>
+                </tr>
+              </thead>
             <tbody>
               {data.map((item, idx) => {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
+                const rate = getConversionRate(item.currency);
+                const budgetCAD = (item.budgetTotal || 0) * rate;
                 return (
                   <tr key={item.id} className={`border-b border-slate-700/30 transition-all duration-200 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/10'} hover:bg-slate-700/40 hover:shadow-inner`}>
-                    <td className="px-3 py-2 font-medium text-white"><Number>{item.year}</Number></td>
                     <td className="px-3 py-2 text-slate-300">{item.category}</td>
+                    <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
+                    <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
+                    <td className="px-3 py-2 text-center text-slate-300 font-medium">{item.currency}</td>
+                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.budgetTotal)}</Number></td>
+                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(budgetCAD)}</Number></td>
+                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.actualTotal)}</Number></td>
+                    <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                      <Number>{formatCurrency(variance)}</Number>
+                    </td>
                     <td className="px-3 py-2 text-center" title={item.costType}>
                       {item.costType === 'Retained' ? (
                         <FaLock className="text-blue-400 inline-block" title="Retained" />
                       ) : (
                         <FaShare className="text-emerald-400 inline-block" title="Distributed" />
                       )}
-                    </td>
-                    <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
-                    <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
-                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.budgetTotal)}</Number></td>
-                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.actualTotal)}</Number></td>
-                    <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      <Number>{formatCurrency(variance)}</Number>
                     </td>
                     <td className="px-3 py-2 text-center space-x-2">
                       <button
@@ -210,18 +233,18 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
           <div className="text-xs font-medium text-slate-400">
             Page <span className="font-bold text-white"><Number>{page}</Number></span> • <span className="font-bold text-white"><Number>{data.length}</Number></span> items
           </div>
-          <div className="space-x-1">
+          <div className="flex gap-2">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-2 py-1 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1"
+              className="px-3 py-1.5 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1 h-8"
             >
               <FaChevronLeft size={12} /> Prev
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
               disabled={data.length < pageSize}
-              className="px-2 py-1 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1"
+              className="px-3 py-1.5 bg-slate-700 text-slate-200 rounded text-xs hover:bg-slate-600 disabled:opacity-50 transition-colors font-medium inline-flex items-center gap-1 h-8"
             >
               Next <FaChevronRight size={12} />
             </button>
