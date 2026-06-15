@@ -138,40 +138,49 @@ export async function create(req, res, next) {
       });
     }
 
-    const insertResult = await db('GACosts').insert({
-      year,
-      categoryId: category,
-      costType,
-      serviceSoftware,
-      vendor,
-      version,
-      subCategoryId: subCategory || null,
-      currencyCode: currency || 'CAD',
-      createdByUserId: req.user?.id || null,
-      createdAt: db.fn.now(),
-      updatedAt: db.fn.now()
-    });
+    let gaCostId;
+    const trx = await db.transaction();
+    try {
+      const insertResult = await trx('GACosts').insert({
+        year,
+        categoryId: category,
+        costType,
+        serviceSoftware,
+        vendor,
+        version,
+        subCategoryId: subCategory || null,
+        currencyCode: currency || 'CAD',
+        createdByUserId: req.user?.id || null,
+        createdAt: trx.fn.now(),
+        updatedAt: trx.fn.now()
+      });
 
-    const gaCostId = insertResult[0];
+      gaCostId = insertResult[0];
 
-    const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
-    await db('GACostsBudget').insert({
-      gaCostId,
-      maintenanceAmount: budgetMaintenance || 0,
-      newAmount: budgetNew || 0,
-      totalAmount: budgetTotal,
-      createdAt: db.fn.now(),
-      updatedAt: db.fn.now()
-    });
+      const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
+      await trx('GACostsBudget').insert({
+        gaCostId,
+        maintenanceAmount: budgetMaintenance || 0,
+        newAmount: budgetNew || 0,
+        totalAmount: budgetTotal,
+        createdAt: trx.fn.now(),
+        updatedAt: trx.fn.now()
+      });
 
-    await db('GACostsActual').insert({
-      gaCostId,
-      maintenanceAmount: 0,
-      newAmount: 0,
-      totalAmount: 0,
-      createdAt: db.fn.now(),
-      updatedAt: db.fn.now()
-    });
+      await trx('GACostsActual').insert({
+        gaCostId,
+        maintenanceAmount: 0,
+        newAmount: 0,
+        totalAmount: 0,
+        createdAt: trx.fn.now(),
+        updatedAt: trx.fn.now()
+      });
+
+      await trx.commit();
+    } catch (error) {
+      await trx.rollback();
+      throw error;
+    }
 
     const newCost = await db('GACosts')
       .where('GACosts.id', gaCostId)
