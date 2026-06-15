@@ -38,14 +38,14 @@ body {
   }
 
   .card {
-    @apply bg-slate-800 rounded-lg shadow-lg border border-slate-700;
+    @apply bg-slate-800 rounded-2xl shadow-xl border-0;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-slate-600 rounded-lg bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    @apply w-full px-4 py-2.5 border border-slate-700/50 rounded-lg bg-slate-900/50 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-700 transition-all duration-200;
   }
 
   .table-row {
-    @apply border-b border-slate-700 hover:bg-slate-700/50 transition-colors;
+    @apply border-b border-slate-700/30 hover:bg-slate-700/40 transition-all duration-200;
   }
 }
