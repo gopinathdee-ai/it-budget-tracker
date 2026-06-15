@@ -134,7 +134,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-slate-800 p-6 rounded-lg max-h-screen overflow-y-auto">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-slate-800 p-8 rounded-2xl max-h-screen overflow-y-auto">
       <div className="flex justify-between items-center mb-4 sticky top-0 bg-slate-800 pb-2">
         <h2 className="text-xl font-bold text-white">
           {cost ? 'Edit G&A Cost' : 'New G&A Cost'}
@@ -259,7 +259,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full px-3 py-2 border border-slate-700/50 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-slate-700/50 rounded-lg rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -274,7 +274,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full px-3 py-2 border border-slate-700/50 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-slate-700/50 rounded-lg rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -295,11 +295,11 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-3 mt-6 pt-4 border-t border-slate-700">
+      <div className="flex gap-3 mt-8 pt-6 border-t border-slate-700/30">
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 font-medium transition-all"
+          className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95"
         >
           {loading ? 'Saving...' : cost ? 'Update' : 'Create'}
         </button>
@@ -307,7 +307,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           type="button"
           onClick={onCancel}
           disabled={loading}
-          className="flex-1 px-4 py-2 bg-slate-700 text-slate-200 rounded-md hover:bg-slate-600 disabled:opacity-50 font-medium transition-colors"
+          className="flex-1 px-4 py-3 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 disabled:opacity-50 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95"
         >
           Cancel
         </button>

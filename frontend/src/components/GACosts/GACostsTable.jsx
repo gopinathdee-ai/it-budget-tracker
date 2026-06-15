@@ -86,7 +86,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Filters */}
-      <div className="card p-3 bg-gradient-to-r from-slate-800 to-slate-700 mb-4">
+      <div className="card p-6 bg-slate-800/40 rounded-2xl shadow-lg mb-6 border border-slate-700/20">
         <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
           <FaSearch className="text-sm text-blue-400" /> Filters
         </h3>
@@ -137,7 +137,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
       </div>
 
       {/* Table */}
-      <div className="card overflow-hidden shadow-md">
+      <div className="card overflow-hidden shadow-2xl rounded-2xl bg-slate-800/50">
         {data.length === 0 ? (
           <div className="p-8 text-center">
             <FaSearch className="text-3xl mb-3 mx-auto text-slate-600" />
@@ -146,7 +146,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="bg-gradient-to-r from-slate-900 to-slate-800 text-white sticky top-0">
+              <thead className="bg-gradient-to-r from-slate-900/80 to-slate-800/80 text-white sticky top-0 backdrop-blur-sm">
                 <tr>
                   <th className="px-3 py-2 text-left font-semibold">Year</th>
                 <th className="px-3 py-2 text-left font-semibold">Category</th>
@@ -163,7 +163,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
               {data.map((item, idx) => {
                 const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 return (
-                  <tr key={item.id} className={`border-b border-slate-700/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-800/30'} hover:bg-slate-700/50`}>
+                  <tr key={item.id} className={`border-b border-slate-700/30 transition-all duration-200 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/10'} hover:bg-slate-700/40 hover:shadow-inner`}>
                     <td className="px-3 py-2 font-medium text-white"><Number>{item.year}</Number></td>
                     <td className="px-3 py-2 text-slate-300">{item.category}</td>
                     <td className="px-3 py-2 text-center" title={item.costType}>
@@ -206,7 +206,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
 
         {/* Pagination */}
         {data.length > 0 && (
-        <div className="flex justify-between items-center mt-4 p-2 bg-slate-800/50 rounded shadow-sm">
+        <div className="flex justify-between items-center mt-6 p-4 bg-slate-800/30 rounded-xl shadow-md">
           <div className="text-xs font-medium text-slate-400">
             Page <span className="font-bold text-white"><Number>{page}</Number></span> • <span className="font-bold text-white"><Number>{data.length}</Number></span> items
           </div>

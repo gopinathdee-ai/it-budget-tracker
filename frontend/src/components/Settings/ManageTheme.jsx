@@ -38,7 +38,7 @@ export default function ManageTheme() {
 
   return (
     <div className="space-y-8">
-      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
+      <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl">
         <h2 className="text-xl font-semibold text-white mb-6">Color Scheme</h2>
         <p className="text-slate-400 mb-6">Choose your preferred color theme for the application</p>
 

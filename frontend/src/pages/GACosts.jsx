@@ -32,9 +32,9 @@ export default function GACostsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       {/* Header with Year Selector & Refresh */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-1">G&A Costs Management</h1>
           <p className="text-xs text-slate-400">Manage and track all G&A costs across your organization</p>
@@ -49,7 +49,7 @@ export default function GACostsPage() {
           </select>
           <button
             onClick={() => setRefreshKey(k => k + 1)}
-            className="px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md hover:from-blue-700 hover:to-blue-800 flex items-center gap-2 font-medium transition-all text-sm"
+            className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 flex items-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 text-sm"
           >
             <FaSync /> Refresh
           </button>
@@ -70,8 +70,8 @@ export default function GACostsPage() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <GACostsForm
               cost={selectedCost}
               onSuccess={handleSuccess}

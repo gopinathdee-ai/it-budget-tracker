@@ -104,7 +104,7 @@ export default function ManageMajorMinor() {
       />
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
+      <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl">
         <h2 className="text-xl font-semibold text-white mb-6">Add New Major.Minor Code</h2>
 
         <form onSubmit={handleAddMajorMinor} className="flex gap-3 mb-6">
@@ -143,7 +143,7 @@ export default function ManageMajorMinor() {
             <p className="text-slate-400 text-center py-8">No Major.Minor codes yet. Add one to get started!</p>
           ) : (
             majorMinors.map(mm => (
-              <div key={mm.id} className="p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
+              <div key={mm.id} className="p-4 bg-slate-900/30 rounded-xl shadow-md hover:bg-slate-900/50 transition-all duration-200 hover:shadow-lg">
                 {editingId === mm.id ? (
                   <div className="space-y-3">
                     <input

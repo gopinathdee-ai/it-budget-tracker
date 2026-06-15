@@ -63,8 +63,8 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
 
       {/* Summary Cards */}
       {summary && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="card p-4 bg-gradient-to-br from-blue-900/40 to-blue-800/40 border-blue-600/30 shadow-lg hover:shadow-xl transition-shadow">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="card p-6 bg-gradient-to-br from-blue-900/50 to-blue-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget</p>
@@ -73,7 +73,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
               <FaBriefcase className="text-2xl text-blue-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
           </div>
-          <div className="card p-4 bg-gradient-to-br from-emerald-900/40 to-emerald-800/40 border-emerald-600/30 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="card p-6 bg-gradient-to-br from-emerald-900/50 to-emerald-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-emerald-300 mb-1 uppercase tracking-wide">Total Actual</p>
@@ -82,7 +82,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
               <FaCheck className="text-2xl text-emerald-400 opacity-60 flex-shrink-0 mt-1" />
             </div>
           </div>
-          <div className={`card p-4 bg-gradient-to-br ${summary.variance >= 0 ? 'from-emerald-900/40 to-emerald-800/40 border-emerald-600/30' : 'from-red-900/40 to-red-800/40 border-red-600/30'} shadow-lg hover:shadow-xl transition-shadow`}>
+          <div className={`card p-6 bg-gradient-to-br ${summary.variance >= 0 ? 'from-emerald-900/50 to-emerald-800/40' : 'from-red-900/50 to-red-800/40'} rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105`}>
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: summary.variance >= 0 ? '#a7f3d0' : '#fca5a5' }}>
@@ -99,7 +99,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
               )}
             </div>
           </div>
-          <div className="card p-4 bg-gradient-to-br from-purple-900/40 to-purple-800/40 border-purple-600/30 shadow-lg hover:shadow-xl transition-shadow">
+          <div className="card p-6 bg-gradient-to-br from-purple-900/50 to-purple-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold text-purple-300 mb-1 uppercase tracking-wide">Utilization</p>

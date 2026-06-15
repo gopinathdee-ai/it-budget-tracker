@@ -87,7 +87,7 @@ export default function ManageCurrency() {
     <div className="space-y-6">
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
+      <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl">
         <h2 className="text-xl font-semibold text-white mb-6">Manage Currency Conversions</h2>
         <p className="text-slate-400 mb-6">Add currencies and update conversion rates for multi-currency support (base: CAD)</p>
 
@@ -97,7 +97,7 @@ export default function ManageCurrency() {
           </div>
         )}
 
-        <div className="bg-slate-900/50 p-6 rounded-lg shadow-sm mb-8">
+        <div className="bg-slate-900/40 p-6 rounded-xl shadow-lg mb-8 border border-slate-700/20">
           <h3 className="text-lg font-semibold text-white mb-4">Add New Currency</h3>
           <form onSubmit={handleAddCurrency} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -144,7 +144,7 @@ export default function ManageCurrency() {
             <p className="text-slate-400 text-center py-8">No currencies found</p>
           ) : (
             currencies.map(curr => (
-              <div key={curr.code} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
+              <div key={curr.code} className="flex items-center justify-between p-4 bg-slate-900/30 rounded-xl shadow-md hover:bg-slate-900/50 transition-all duration-200 hover:shadow-lg">
                 {editingCode === curr.code ? (
                   <div className="flex gap-2 flex-1 items-center">
                     <span className="text-white font-bold w-16">{curr.code}</span>

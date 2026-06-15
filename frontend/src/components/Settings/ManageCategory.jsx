@@ -88,7 +88,7 @@ export default function ManageCategory() {
       />
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
-      <div className="bg-slate-800 rounded-lg p-8 shadow-md">
+      <div className="bg-slate-800 rounded-2xl p-8 shadow-2xl">
         <h2 className="text-xl font-semibold text-white mb-6">Add New Category</h2>
 
         <form onSubmit={handleAddCategory} className="flex gap-3 mb-6">
@@ -120,7 +120,7 @@ export default function ManageCategory() {
             <p className="text-slate-400 text-center py-8">No categories yet. Add one to get started!</p>
           ) : (
             categories.map(cat => (
-              <div key={cat.id} className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg shadow-sm hover:bg-slate-900 transition-all">
+              <div key={cat.id} className="flex items-center justify-between p-4 bg-slate-900/30 rounded-xl shadow-md hover:bg-slate-900/50 transition-all duration-200 hover:shadow-lg">
                 {editingId === cat.id ? (
                   <div className="flex gap-2 flex-1">
                     <input
