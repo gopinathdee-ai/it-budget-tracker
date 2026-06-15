@@ -141,7 +141,8 @@ export async function create(req, res, next) {
     let gaCostId;
     const trx = await db.transaction();
     try {
-      const insertResult = await trx('GACosts').insert({
+      const timestamp = new Date();
+      const insertData = {
         year,
         categoryId: category,
         costType,
@@ -151,11 +152,20 @@ export async function create(req, res, next) {
         subCategoryId: subCategory || null,
         currencyCode: currency || 'CAD',
         createdByUserId: req.user?.id || null,
-        createdAt: trx.fn.now(),
-        updatedAt: trx.fn.now()
-      });
+        createdAt: timestamp,
+        updatedAt: timestamp
+      };
 
-      gaCostId = insertResult[0];
+      await trx('GACosts').insert(insertData);
+
+      const inserted = await trx('GACosts')
+        .where('createdAt', timestamp)
+        .where('serviceSoftware', serviceSoftware)
+        .where('vendor', vendor)
+        .orderBy('id', 'desc')
+        .first();
+
+      gaCostId = inserted?.id;
 
       const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
       await trx('GACostsBudget').insert({
