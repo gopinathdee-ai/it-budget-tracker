@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { FaBriefcase, FaCheck, FaArrowUp, FaArrowDown, FaChartBar, FaSync } from 'react-icons/fa';
+import { ThemeContext } from '../../contexts/ThemeContext.js';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency, formatPercent } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
@@ -11,11 +12,35 @@ const YEARS = [2024, 2025, 2026, 2027];
 export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
+  const [currencies, setCurrencies] = useState([]);
+  const { currentTheme } = useContext(ThemeContext);
   const { request, loading } = useApi();
+  const isLightTheme = currentTheme === 'light-clean';
+  const textColor = isLightTheme ? 'text-slate-900' : 'text-white';
 
   useEffect(() => {
-    fetchData();
-  }, [selectedYear, refreshTrigger, request]);
+    const fetchCurrencies = async () => {
+      try {
+        const response = await request('GET', '/api/config/currencies');
+        setCurrencies(response.data || []);
+      } catch (err) {
+        console.error('Failed to load currencies');
+      }
+    };
+    fetchCurrencies();
+  }, [request]);
+
+  useEffect(() => {
+    if (currencies.length > 0) {
+      fetchData();
+    }
+  }, [selectedYear, refreshTrigger, request, currencies]);
+
+  const getConversionRate = (currency) => {
+    if (currency === 'CAD') return 1;
+    const curr = currencies.find(c => c.code === currency);
+    return curr?.conversionRate || 1;
+  };
 
   const fetchData = async () => {
     try {
@@ -27,14 +52,19 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
       const byCategory = {};
 
       (response.data || []).forEach(item => {
-        totalBudget += item.budgetTotal || 0;
-        totalActual += item.actualTotal || 0;
+        const rate = getConversionRate(item.currency);
+        const budgetCAD = (item.budgetTotal || 0) * rate;
+        const actualCAD = (item.actualTotal || 0) * rate;
 
-        if (!byCategory[item.category]) {
-          byCategory[item.category] = { budget: 0, actual: 0 };
+        totalBudget += budgetCAD;
+        totalActual += actualCAD;
+
+        const categoryName = item.categoryName || 'Unknown';
+        if (!byCategory[categoryName]) {
+          byCategory[categoryName] = { budget: 0, actual: 0 };
         }
-        byCategory[item.category].budget += item.budgetTotal || 0;
-        byCategory[item.category].actual += item.actualTotal || 0;
+        byCategory[categoryName].budget += budgetCAD;
+        byCategory[categoryName].actual += actualCAD;
       });
 
       const variance = totalBudget - totalActual;
@@ -59,7 +89,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Title */}
-      <h2 className="text-lg font-bold text-white">G&A Costs Summary</h2>
+      <h2 className={`text-lg font-bold ${textColor}`}>G&A Costs Summary</h2>
 
       {/* Summary Cards */}
       {summary && (
@@ -67,7 +97,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
           <div className="card p-6 bg-gradient-to-br from-blue-900/50 to-blue-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget</p>
+                <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget (CAD)</p>
                 <p className="text-xl font-bold text-white truncate"><Number>{formatCurrency(summary.totalBudget)}</Number></p>
               </div>
               <FaBriefcase className="text-2xl text-blue-400 opacity-60 flex-shrink-0 mt-1" />
@@ -76,7 +106,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
           <div className="card p-6 bg-gradient-to-br from-emerald-900/50 to-emerald-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-emerald-300 mb-1 uppercase tracking-wide">Total Actual</p>
+                <p className="text-xs font-semibold text-emerald-300 mb-1 uppercase tracking-wide">Total Actual (CAD)</p>
                 <p className="text-xl font-bold text-white truncate"><Number>{formatCurrency(summary.totalActual)}</Number></p>
               </div>
               <FaCheck className="text-2xl text-emerald-400 opacity-60 flex-shrink-0 mt-1" />
@@ -86,7 +116,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold mb-1 uppercase tracking-wide" style={{ color: summary.variance >= 0 ? '#a7f3d0' : '#fca5a5' }}>
-                  Variance
+                  Variance (CAD)
                 </p>
                 <p className="text-xl font-bold text-white truncate">
                   <Number>{formatCurrency(summary.variance)}</Number>

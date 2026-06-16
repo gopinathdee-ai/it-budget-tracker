@@ -69,8 +69,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
     if (cost) {
       setFormData({
         year: cost.year || '',
-        category: cost.category || '',
-        subCategory: cost.subCategory || '',
+        category: cost.category ? cost.category.toString() : '',
+        subCategory: cost.subCategory ? cost.subCategory.toString() : '',
         currency: cost.currency || 'CAD',
         costType: cost.costType || '',
         serviceSoftware: cost.serviceSoftware || '',
@@ -160,13 +160,13 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           <label className="block text-sm font-semibold text-slate-200 mb-2">Category *</label>
           <select
             name="category"
-            value={formData.category}
+            value={formData.category || ''}
             onChange={handleChange}
             disabled={loadingData}
             className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.category ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Category</option>
-            {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+            {categories.map(cat => <option key={cat.id} value={cat.id.toString()}>{cat.name}</option>)}
           </select>
           {errors.category && <p className="mt-1 text-sm text-red-400">{errors.category}</p>}
         </div>
@@ -178,13 +178,13 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
           </label>
           <select
             name="subCategory"
-            value={formData.subCategory}
+            value={formData.subCategory || ''}
             onChange={handleChange}
             disabled={!formData.category || subcategories.length === 0}
             className={`w-full px-3 py-2 border rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.subCategory ? 'border-red-500' : 'border-slate-600'}`}
           >
             <option value="">Select Sub Category</option>
-            {subcategories.map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
+            {subcategories.map(sub => <option key={sub.id} value={sub.id.toString()}>{sub.name}</option>)}
           </select>
           {errors.subCategory && <p className="mt-1 text-sm text-red-400">{errors.subCategory}</p>}
         </div>

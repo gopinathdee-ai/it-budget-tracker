@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLock, FaShare } from 'react-icons/fa';
+import { ThemeContext } from '../../contexts/ThemeContext.js';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
@@ -20,7 +21,13 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [currencies, setCurrencies] = useState([]);
+  const { currentTheme } = useContext(ThemeContext);
   const { request, loading } = useApi();
+  const isLightTheme = currentTheme === 'light-clean';
+  const textColor = isLightTheme ? 'text-slate-900' : 'text-slate-300';
+  const headerBg = isLightTheme ? 'bg-slate-100' : 'bg-gradient-to-r from-slate-900/80 to-slate-800/80';
+  const tableBg = isLightTheme ? 'bg-slate-50/50' : 'bg-slate-800/50';
+  const rowBg = isLightTheme ? 'bg-slate-100/50 hover:bg-slate-200/50' : 'bg-slate-800/30 hover:bg-slate-700/40';
 
   useEffect(() => {
     const fetchCurrencies = async () => {
@@ -105,17 +112,17 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
       {error && <ErrorMessage error={error} onDismiss={() => setError(null)} />}
 
       {/* Filters */}
-      <div className="card p-6 bg-slate-800/40 rounded-2xl shadow-lg mb-6 border border-slate-700/20">
-        <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+      <div className={`card p-6 ${isLightTheme ? 'bg-slate-100/50 border-slate-300' : 'bg-slate-800/40 border-slate-700/20'} rounded-2xl shadow-lg mb-6 border`}>
+        <h3 className={`text-sm font-bold ${isLightTheme ? 'text-slate-900' : 'text-white'} mb-3 flex items-center gap-2`}>
           <FaSearch className="text-sm text-blue-400" /> Filters
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Year</label>
+            <label className={`block text-xs font-medium ${isLightTheme ? 'text-slate-700' : 'text-slate-300'} mb-1`}>Year</label>
             <select
               value={filters.year}
               onChange={(e) => handleFilterChange('year', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLightTheme ? 'border-slate-400 bg-white text-slate-900' : 'border-slate-700/40 bg-slate-900 text-white'}`}
             >
               <option value="">All Years</option>
               {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
@@ -123,11 +130,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Category</label>
+            <label className={`block text-xs font-medium ${isLightTheme ? 'text-slate-700' : 'text-slate-300'} mb-1`}>Category</label>
             <select
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLightTheme ? 'border-slate-400 bg-white text-slate-900' : 'border-slate-700/40 bg-slate-900 text-white'}`}
             >
               <option value="">All Categories</option>
               {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
@@ -135,11 +142,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Cost Type</label>
+            <label className={`block text-xs font-medium ${isLightTheme ? 'text-slate-700' : 'text-slate-300'} mb-1`}>Cost Type</label>
             <select
               value={filters.costType}
               onChange={(e) => handleFilterChange('costType', e.target.value)}
-              className="w-full px-2 py-1.5 text-sm border border-slate-700/40 rounded bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLightTheme ? 'border-slate-400 bg-white text-slate-900' : 'border-slate-700/40 bg-slate-900 text-white'}`}
             >
               <option value="">All Types</option>
               {COST_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
@@ -149,7 +156,7 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
 
         <button
           onClick={handleClearFilters}
-          className="mt-2 px-3 py-1.5 text-xs bg-slate-700 text-slate-200 rounded hover:bg-slate-600 transition-colors font-medium"
+          className={`mt-2 px-3 py-1.5 text-xs rounded hover:transition-colors font-medium ${isLightTheme ? 'bg-slate-300 text-slate-800 hover:bg-slate-400' : 'bg-slate-700 text-slate-200 hover:bg-slate-600'}`}
         >
           Clear Filters
         </button>
@@ -165,35 +172,36 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="bg-gradient-to-r from-slate-900/80 to-slate-800/80 text-white sticky top-0 backdrop-blur-sm">
+              <thead className={`${headerBg} ${isLightTheme ? 'text-slate-900' : 'text-white'} sticky top-0 backdrop-blur-sm`}>
                 <tr>
-                  <th className="px-3 py-2 text-left font-semibold">Category</th>
-                  <th className="px-3 py-2 text-left font-semibold">Vendor</th>
-                  <th className="px-3 py-2 text-left font-semibold">Service/Software</th>
-                  <th className="px-3 py-2 text-center font-semibold">Currency</th>
-                  <th className="px-3 py-2 text-right font-semibold">Budget</th>
-                  <th className="px-3 py-2 text-right font-semibold">Budget (CAD)</th>
-                  <th className="px-3 py-2 text-right font-semibold">Actual</th>
-                  <th className="px-3 py-2 text-right font-semibold">Variance</th>
-                  <th className="px-3 py-2 text-center font-semibold">Type</th>
-                  <th className="px-3 py-2 text-center font-semibold">Actions</th>
+                  <th className={`px-3 py-2 text-left font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Category</th>
+                  <th className={`px-3 py-2 text-left font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Vendor</th>
+                  <th className={`px-3 py-2 text-left font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Service/Software</th>
+                  <th className={`px-3 py-2 text-center font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Currency</th>
+                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget</th>
+                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget (CAD)</th>
+                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Actual (CAD)</th>
+                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Variance (CAD)</th>
+                  <th className={`px-3 py-2 text-center font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Type</th>
+                  <th className={`px-3 py-2 text-center font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Actions</th>
                 </tr>
               </thead>
             <tbody>
               {data.map((item, idx) => {
-                const variance = (item.budgetTotal || 0) - (item.actualTotal || 0);
                 const rate = getConversionRate(item.currency);
                 const budgetCAD = (item.budgetTotal || 0) * rate;
+                const actualCAD = (item.actualTotal || 0) * rate;
+                const variance = budgetCAD - actualCAD;
                 return (
-                  <tr key={item.id} className={`border-b border-slate-700/30 transition-all duration-200 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/10'} hover:bg-slate-700/40 hover:shadow-inner`}>
-                    <td className="px-3 py-2 text-slate-300">{item.category}</td>
-                    <td className="px-3 py-2 text-slate-300">{item.vendor}</td>
-                    <td className="px-3 py-2 text-slate-300 truncate" title={item.serviceSoftware}>{item.serviceSoftware}</td>
-                    <td className="px-3 py-2 text-center text-slate-300 font-medium">{item.currency}</td>
-                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.budgetTotal)}</Number></td>
-                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(budgetCAD)}</Number></td>
-                    <td className="px-3 py-2 text-right font-semibold text-white"><Number>{formatCurrency(item.actualTotal)}</Number></td>
-                    <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  <tr key={item.id} className={`border-b transition-all duration-200 ${isLightTheme ? `border-slate-300 ${idx % 2 === 0 ? 'bg-slate-100/50' : 'bg-slate-50/50'} hover:bg-slate-200/50` : `border-slate-700/30 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/10'} hover:bg-slate-700/40`} hover:shadow-inner`}>
+                    <td className={`px-3 py-2 ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`}>{item.categoryName}</td>
+                    <td className={`px-3 py-2 ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`}>{item.vendor}</td>
+                    <td className={`px-3 py-2 truncate ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`} title={item.serviceSoftware}>{item.serviceSoftware}</td>
+                    <td className={`px-3 py-2 text-center font-medium ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`}>{item.currency}</td>
+                    <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(item.budgetTotal)}</Number></td>
+                    <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(budgetCAD)}</Number></td>
+                    <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(actualCAD)}</Number></td>
+                    <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-500' : isLightTheme ? 'text-emerald-600' : 'text-emerald-400'}`}>
                       <Number>{formatCurrency(variance)}</Number>
                     </td>
                     <td className="px-3 py-2 text-center" title={item.costType}>

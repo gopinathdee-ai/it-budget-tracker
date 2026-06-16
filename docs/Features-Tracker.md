@@ -162,22 +162,38 @@ Track feature completion status and implementation details.
 
 ### 2.4 Dashboard & Reporting
 
-#### Frontend Components
-- [ ] Main Dashboard - Overview page
-- [ ] Budget vs Actual Charts (Recharts)
-- [ ] Spending Trends (line chart)
-- [ ] Category Breakdown (pie chart)
+#### Phase 2.4.1: G&A Dashboard - Section 1 ✅ COMPLETE
+
+**Frontend Components**
+- [x] Main Dashboard page with G&A section
+- [x] Retained vs Distributed pie chart (Recharts)
+- [x] Retained & Distributed summary cards (Total Budget CAD, Total Actual CAD, Variance)
+- [x] Retained Category Breakdown - Hierarchical table (Category → SubCategory → Budget/Actual)
+- [x] Distributed Category Breakdown - Hierarchical table
+- [x] Theme support for all components
+- [x] Mobile responsive design
+
+**Backend**
+- [x] Already have GET /api/gacosts with category data needed
+
+**Components Created**
+- GACostsDashboardSection.jsx - Main dashboard with all 4 sections
+- Updated Dashboard.jsx to integrate G&A section with year selector
+
+**Notes**
+- Data sourced from existing GACosts API endpoint
+- No new backend endpoints needed for Phase 1
+- Pie chart uses donut style for visual appeal
+- Hierarchical tables support expand/collapse by category
+- Spending Trends deferred to Phase 2.4.2
+
+#### Phase 2.4.2: Advanced Dashboard (Future)
+- [ ] Spending Trends (line chart, monthly/YoY)
 - [ ] Project Status Summary
-- [ ] Key Metrics/KPIs
 - [ ] Date range selector
 - [ ] Export to CSV/PDF
-
-#### Backend
-- [ ] GET /api/dashboard/summary - Overview data
-- [ ] GET /api/dashboard/trends - Trend analysis
-- [ ] GET /api/reports/budgetvactual - Comparison report
-- [ ] GET /api/reports/spending - Spending analysis
-- [ ] Report caching strategy
+- [ ] GET /api/dashboard/summary endpoint
+- [ ] GET /api/dashboard/trends endpoint
 
 ---
 
@@ -304,7 +320,7 @@ Track feature completion status and implementation details.
 |--------|-------|
 | Backend Routes Created | 19 (health, info, gacosts CRUD, settings, categories, currencies, majorminor) |
 | Backend Controllers | 4 (gacostsController, categoriesController, configController, settingsController) |
-| Frontend Components | 20 (Dashboard, GACosts, Admin, Settings subcomponents, common components) |
+| Frontend Components | 22 (Dashboard, GACosts, Admin, Dashboard subcomponents, common components) |
 | Frontend Pages | 3 (Dashboard, GACosts, Admin/Settings) |
 | Database Tables | 12 (Users, Permissions, GACosts, Categories, SubCategories, Currencies, MajorMinor, AppSettings, + budgets/actuals tables) |
 | Database Migrations | 6 (schema, categories, gacosts updates, majorminor, appSettings, gacosts category) |
@@ -314,6 +330,7 @@ Track feature completion status and implementation details.
 | Tests Written | 0 |
 | Git Commits | 8+ |
 | Documentation Pages | 4 (RAD.md, Prompts.md, Features-Tracker.md, DOCUMENTATION-UPDATES.md) |
+| npm Packages Added | recharts (for dashboard charts) |
 
 ---
 
@@ -338,20 +355,20 @@ Track feature completion status and implementation details.
 
 ### By Numbers
 - **Total Features:** 65
-- **Completed:** 50+ (Phase 1 + Phase 2.1 + Phase 2.2)
+- **Completed:** 52+ (Phase 1 + Phase 2.1 + Phase 2.2 + Phase 2.4.1)
 - **In Progress:** 0
 - **Blocked:** 0
-- **Planned:** 15
+- **Planned:** 13
 
 ### Overall Progress
 ```
 Phase 1 (Foundation):   ████████████████████ 100% ✅
-Phase 2 (Core):         ██████████░░░░░░░░░░  50% (2.1 + 2.2 complete)
+Phase 2 (Core):         ███████████░░░░░░░░░  60% (2.1 + 2.2 + 2.4.1 complete)
 Phase 3 (Auth):         ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 4 (Advanced):     ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 5 (Deployment):   ░░░░░░░░░░░░░░░░░░░░   0%
 
-Overall: 44% complete (Phase 1 + Phase 2.1-2.2 complete)
+Overall: 46% complete (Phase 1 + Phase 2.1-2.2 + Phase 2.4.1 complete)
 ```
 
 ---

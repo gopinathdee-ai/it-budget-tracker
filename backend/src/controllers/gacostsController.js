@@ -11,7 +11,10 @@ export async function getAll(req, res, next) {
     let query = db('GACosts').select(
       'GACosts.id',
       'GACosts.year',
-      'Categories.name as category',
+      'GACosts.categoryId as category',
+      'GACosts.subCategoryId as subCategory',
+      'Categories.name as categoryName',
+      'SubCategories.name as subCategoryName',
       'GACosts.costType',
       'GACosts.serviceSoftware',
       'GACosts.vendor',
@@ -28,6 +31,7 @@ export async function getAll(req, res, next) {
       db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
     )
       .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
+      .leftJoin('SubCategories', 'GACosts.subCategoryId', 'SubCategories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId');
 
@@ -79,7 +83,10 @@ export async function getById(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'Categories.name as category',
+        'GACosts.categoryId as category',
+        'GACosts.subCategoryId as subCategory',
+        'Categories.name as categoryName',
+        'SubCategories.name as subCategoryName',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -96,6 +103,7 @@ export async function getById(req, res, next) {
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
       .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
+      .leftJoin('SubCategories', 'GACosts.subCategoryId', 'SubCategories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();
@@ -156,16 +164,8 @@ export async function create(req, res, next) {
         updatedAt: timestamp
       };
 
-      await trx('GACosts').insert(insertData);
-
-      const inserted = await trx('GACosts')
-        .where('createdAt', timestamp)
-        .where('serviceSoftware', serviceSoftware)
-        .where('vendor', vendor)
-        .orderBy('id', 'desc')
-        .first();
-
-      gaCostId = inserted?.id;
+      const insertResult = await trx('GACosts').insert(insertData).returning('id');
+      gaCostId = insertResult[0].id;
 
       const budgetTotal = (budgetMaintenance || 0) + (budgetNew || 0);
       await trx('GACostsBudget').insert({
@@ -197,7 +197,10 @@ export async function create(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'Categories.name as category',
+        'GACosts.categoryId as category',
+        'GACosts.subCategoryId as subCategory',
+        'Categories.name as categoryName',
+        'SubCategories.name as subCategoryName',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -214,6 +217,7 @@ export async function create(req, res, next) {
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
       .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
+      .leftJoin('SubCategories', 'GACosts.subCategoryId', 'SubCategories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();
@@ -286,7 +290,10 @@ export async function update(req, res, next) {
       .select(
         'GACosts.id',
         'GACosts.year',
-        'Categories.name as category',
+        'GACosts.categoryId as category',
+        'GACosts.subCategoryId as subCategory',
+        'Categories.name as categoryName',
+        'SubCategories.name as subCategoryName',
         'GACosts.costType',
         'GACosts.serviceSoftware',
         'GACosts.vendor',
@@ -303,6 +310,7 @@ export async function update(req, res, next) {
         db.raw('COALESCE(GACostsActual.totalAmount, 0) as actualTotal')
       )
       .leftJoin('Categories', 'GACosts.categoryId', 'Categories.id')
+      .leftJoin('SubCategories', 'GACosts.subCategoryId', 'SubCategories.id')
       .leftJoin('GACostsBudget', 'GACosts.id', 'GACostsBudget.gaCostId')
       .leftJoin('GACostsActual', 'GACosts.id', 'GACostsActual.gaCostId')
       .first();

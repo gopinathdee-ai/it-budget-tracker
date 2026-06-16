@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { FaPlus, FaSync } from 'react-icons/fa';
+import { ThemeContext } from '../contexts/ThemeContext.js';
+import { THEMES } from '../utils/themes.js';
 import GACostsTable from '../components/GACosts/GACostsTable.jsx';
 import GACostsForm from '../components/GACosts/GACostsForm.jsx';
 import GACostsDashboard from '../components/GACosts/GACostsDashboard.jsx';
-import GACostsCategoryBreakdown from '../components/GACosts/GACostsCategoryBreakdown.jsx';
 
 export default function GACostsPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedCost, setSelectedCost] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const { currentTheme } = useContext(ThemeContext);
+  const themeColors = THEMES[currentTheme];
 
   const handleEdit = (cost) => {
     setSelectedCost(cost);
@@ -31,34 +34,39 @@ export default function GACostsPage() {
     setRefreshKey(k => k + 1);
   };
 
+  const isLightTheme = currentTheme === 'light-clean';
+  const textColor = isLightTheme ? 'text-slate-900' : 'text-white';
+  const textMuted = isLightTheme ? 'text-slate-600' : 'text-slate-400';
+
   return (
     <div className="space-y-8">
       {/* Header with Year Selector & Refresh */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-1">G&A Costs Management</h1>
-          <p className="text-xs text-slate-400">Manage and track all G&A costs across your organization</p>
+          <h1 className={`text-3xl font-bold ${textColor} mb-1`}>G&A Costs Management</h1>
+          <p className={`text-xs ${textMuted}`}>Manage and track all G&A costs across your organization</p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-            className="px-3 py-2 border border-slate-600 rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+            className={`px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium ${isLightTheme ? 'border-slate-400 bg-white text-slate-900' : 'border-slate-600 bg-slate-900 text-white'}`}
           >
             {[2024, 2025, 2026, 2027].map(year => <option key={year} value={year}>{year}</option>)}
           </select>
           <button
             onClick={() => setRefreshKey(k => k + 1)}
-            className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 flex items-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 text-sm"
+            className={`px-3 py-2.5 bg-gradient-to-r ${themeColors?.accentColor} text-white rounded-lg hover:opacity-90 flex items-center gap-0 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 text-sm`}
+            title="Refresh"
           >
-            <FaSync /> Refresh
+            <FaSync />
           </button>
           <button
             onClick={() => {
               setSelectedCost(null);
               setShowForm(true);
             }}
-            className="btn-success shadow-lg hover:shadow-xl flex items-center gap-2"
+            className={`px-4 py-2.5 bg-gradient-to-r ${themeColors?.accentColor} text-white rounded-lg hover:opacity-90 flex items-center gap-2 font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 text-sm`}
           >
             <FaPlus /> New G&A Cost
           </button>
@@ -83,20 +91,12 @@ export default function GACostsPage() {
 
       {/* Table */}
       <div>
-        <h2 className="text-lg font-bold mb-3 text-white">G&A Costs List</h2>
+        <h2 className={`text-lg font-bold mb-3 ${textColor}`}>G&A Costs List</h2>
         <GACostsTable
           onEdit={handleEdit}
           onDelete={handleDelete}
           refreshTrigger={refreshKey}
           selectedYear={selectedYear}
-        />
-      </div>
-
-      {/* Category Breakdown */}
-      <div>
-        <GACostsCategoryBreakdown
-          selectedYear={selectedYear}
-          refreshTrigger={refreshKey}
         />
       </div>
     </div>
