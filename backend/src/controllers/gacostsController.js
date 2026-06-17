@@ -20,6 +20,7 @@ export async function getAll(req, res, next) {
       'GACosts.vendor',
       'GACosts.version',
       'GACosts.currencyCode as currency',
+      'GACosts.additionalCost',
       'GACosts.createdByUserId',
       'GACosts.createdAt',
       'GACosts.updatedAt',
@@ -92,6 +93,7 @@ export async function getById(req, res, next) {
         'GACosts.vendor',
         'GACosts.version',
         'GACosts.currencyCode as currency',
+        'GACosts.additionalCost',
         'GACosts.createdByUserId',
         'GACosts.createdAt',
         'GACosts.updatedAt',
@@ -131,7 +133,7 @@ export async function getById(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    const { year, category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew } = req.body;
+    const { year, category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew, additionalCost } = req.body;
 
     const errors = validateGACost({ year, categoryId: category, costType, serviceSoftware, vendor, version, currency });
     if (errors.length > 0) {
@@ -159,6 +161,7 @@ export async function create(req, res, next) {
         version,
         subCategoryId: subCategory || null,
         currencyCode: currency || 'CAD',
+        additionalCost: additionalCost || 0,
         createdByUserId: req.user?.id || null,
         createdAt: timestamp,
         updatedAt: timestamp
@@ -206,6 +209,7 @@ export async function create(req, res, next) {
         'GACosts.vendor',
         'GACosts.version',
         'GACosts.currencyCode as currency',
+        'GACosts.additionalCost',
         'GACosts.createdByUserId',
         'GACosts.createdAt',
         'GACosts.updatedAt',
@@ -235,7 +239,7 @@ export async function create(req, res, next) {
 export async function update(req, res, next) {
   try {
     const { id } = req.params;
-    const { category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew } = req.body;
+    const { category, costType, serviceSoftware, vendor, version, currency, subCategory, budgetMaintenance, budgetNew, additionalCost } = req.body;
 
     const existingCost = await db('GACosts').where('id', id).first();
     if (!existingCost) {
@@ -269,6 +273,7 @@ export async function update(req, res, next) {
     if (version !== undefined) updateData.version = version;
     if (currency !== undefined) updateData.currencyCode = currency;
     if (subCategory !== undefined) updateData.subCategoryId = subCategory || null;
+    if (additionalCost !== undefined) updateData.additionalCost = additionalCost;
     updateData.updatedAt = db.fn.now();
 
     await db('GACosts').where('id', id).update(updateData);
@@ -299,6 +304,7 @@ export async function update(req, res, next) {
         'GACosts.vendor',
         'GACosts.version',
         'GACosts.currencyCode as currency',
+        'GACosts.additionalCost',
         'GACosts.createdByUserId',
         'GACosts.createdAt',
         'GACosts.updatedAt',

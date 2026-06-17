@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useContext } from 'react';
-import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLock, FaShare } from 'react-icons/fa';
+import { FaSearch, FaEdit, FaTrash, FaChevronLeft, FaChevronRight, FaLock, FaShare, FaChartLine } from 'react-icons/fa';
 import { ThemeContext } from '../../contexts/ThemeContext.js';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency } from '../../utils/formatters.js';
@@ -7,12 +7,13 @@ import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
 import ConfirmDialog from '../common/ConfirmDialog.jsx';
 import Number from '../common/Number.jsx';
+import ManageActualsModal from './ManageActualsModal.jsx';
 
 const CATEGORIES = ['Business Apps', 'IT Services', 'Other'];
 const COST_TYPES = ['Retained', 'Distributed'];
 const YEARS = [2024, 2025, 2026, 2027];
 
-export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selectedYear }) {
+export default function GACostsTable({ onEdit, onDelete, onActualsChange, refreshTrigger, selectedYear }) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -21,6 +22,8 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [currencies, setCurrencies] = useState([]);
+  const [generalSettings, setGeneralSettings] = useState(null);
+  const [actualsModal, setActualsModal] = useState({ isOpen: false, gaCostId: null, serviceSoftware: '' });
   const { currentTheme } = useContext(ThemeContext);
   const { request, loading } = useApi();
   const isLightTheme = currentTheme === 'light-clean';
@@ -30,15 +33,19 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
   const rowBg = isLightTheme ? 'bg-slate-100/50 hover:bg-slate-200/50' : 'bg-slate-800/30 hover:bg-slate-700/40';
 
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    const fetchSettings = async () => {
       try {
-        const response = await request('GET', '/api/config/currencies');
-        setCurrencies(response.data || []);
+        const [currRes, settingsRes] = await Promise.all([
+          request('GET', '/api/config/currencies'),
+          request('GET', '/api/settings/general')
+        ]);
+        setCurrencies(currRes.data || []);
+        setGeneralSettings(settingsRes.data || {});
       } catch (err) {
-        console.error('Failed to load currencies');
+        console.error('Failed to load settings');
       }
     };
-    fetchCurrencies();
+    fetchSettings();
   }, [request]);
 
   const fetchData = useCallback(async () => {
@@ -179,7 +186,12 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
                   <th className={`px-3 py-2 text-left font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Service/Software</th>
                   <th className={`px-3 py-2 text-center font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Currency</th>
                   <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget</th>
-                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget (CAD)</th>
+                  {generalSettings?.showAdditionalCost && (
+                    <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>
+                      {generalSettings?.additionalCostFieldName || 'Additional Cost'}
+                    </th>
+                  )}
+                  <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Total (CAD)</th>
                   <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Actual (CAD)</th>
                   <th className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Variance (CAD)</th>
                   <th className={`px-3 py-2 text-center font-semibold ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Type</th>
@@ -189,8 +201,8 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
             <tbody>
               {data.map((item, idx) => {
                 const rate = getConversionRate(item.currency);
-                const budgetCAD = (item.budgetTotal || 0) * rate;
-                const actualCAD = (item.actualTotal || 0) * rate;
+                const budgetCAD = ((item.budgetTotal || 0) + (item.additionalCost || 0)) * rate;
+                const actualCAD = item.actualTotal || 0;
                 const variance = budgetCAD - actualCAD;
                 return (
                   <tr key={item.id} className={`border-b transition-all duration-200 ${isLightTheme ? `border-slate-300 ${idx % 2 === 0 ? 'bg-slate-100/50' : 'bg-slate-50/50'} hover:bg-slate-200/50` : `border-slate-700/30 ${idx % 2 === 0 ? 'bg-slate-800/30' : 'bg-slate-800/10'} hover:bg-slate-700/40`} hover:shadow-inner`}>
@@ -199,6 +211,11 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
                     <td className={`px-3 py-2 truncate ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`} title={item.serviceSoftware}>{item.serviceSoftware}</td>
                     <td className={`px-3 py-2 text-center font-medium ${isLightTheme ? 'text-slate-900' : 'text-slate-300'}`}>{item.currency}</td>
                     <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(item.budgetTotal)}</Number></td>
+                    {generalSettings?.showAdditionalCost && (
+                      <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}>
+                        <Number>{formatCurrency(item.additionalCost || 0)}</Number>
+                      </td>
+                    )}
                     <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(budgetCAD)}</Number></td>
                     <td className={`px-3 py-2 text-right font-semibold ${isLightTheme ? 'text-slate-900' : 'text-white'}`}><Number>{formatCurrency(actualCAD)}</Number></td>
                     <td className={`px-3 py-2 text-right font-bold ${variance < 0 ? 'text-red-500' : isLightTheme ? 'text-emerald-600' : 'text-emerald-400'}`}>
@@ -218,6 +235,13 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
                         className="p-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors inline-flex items-center"
                       >
                         <FaEdit size={14} />
+                      </button>
+                      <button
+                        onClick={() => setActualsModal({ isOpen: true, gaCostId: item.id, serviceSoftware: item.serviceSoftware, currency: item.currency })}
+                        title="Update Actuals"
+                        className="p-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors inline-flex items-center"
+                      >
+                        <FaChartLine size={14} />
                       </button>
                       <button
                         onClick={() => handleDeleteClick(item.id)}
@@ -260,6 +284,18 @@ export default function GACostsTable({ onEdit, onDelete, refreshTrigger, selecte
         </div>
         )}
       </div>
+
+      <ManageActualsModal
+        isOpen={actualsModal.isOpen}
+        gaCostId={actualsModal.gaCostId}
+        serviceSoftware={actualsModal.serviceSoftware}
+        currency={actualsModal.currency}
+        onClose={() => setActualsModal({ isOpen: false, gaCostId: null, serviceSoftware: '', currency: '' })}
+        onActualsChange={() => {
+          fetchData();
+          onActualsChange?.();
+        }}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteConfirm}

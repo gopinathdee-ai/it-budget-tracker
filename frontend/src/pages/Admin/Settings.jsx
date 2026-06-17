@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../hooks/useTheme';
 import { THEMES } from '../../utils/themes';
+import ManageGeneral from '../../components/Settings/ManageGeneral';
 import ManageTheme from '../../components/Settings/ManageTheme';
 import ManageCategory from '../../components/Settings/ManageCategory';
 import ManageSubCategory from '../../components/Settings/ManageSubCategory';
@@ -8,9 +9,10 @@ import ManageCurrency from '../../components/Settings/ManageCurrency';
 import ManageMajorMinor from '../../components/Settings/ManageMajorMinor';
 
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState('theme');
+  const [activeTab, setActiveTab] = useState('general');
 
   const tabs = [
+    { id: 'general', label: 'General' },
     { id: 'theme', label: 'Manage Theme' },
     { id: 'category', label: 'Manage Category' },
     { id: 'subcategory', label: 'Manage Sub Category' },
@@ -44,6 +46,7 @@ export default function Settings() {
 
       {/* Tab Content */}
       <div>
+        {activeTab === 'general' && <ManageGeneral />}
         {activeTab === 'theme' && <ManageTheme />}
         {activeTab === 'category' && <ManageCategory />}
         {activeTab === 'subcategory' && <ManageSubCategory />}

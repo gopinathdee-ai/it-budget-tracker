@@ -167,8 +167,8 @@ Track feature completion status and implementation details.
 **Frontend Components**
 - [x] Main Dashboard page with G&A section
 - [x] Retained vs Distributed pie chart (Recharts)
-- [x] Retained & Distributed summary cards (Total Budget CAD, Total Actual CAD, Variance)
-- [x] Retained Category Breakdown - Hierarchical table (Category → SubCategory → Budget/Actual)
+- [x] Retained & Distributed summary cards (Total (CAD), Total Actual CAD, Variance)
+- [x] Retained Category Breakdown - Hierarchical table (Category → SubCategory → Software/Service)
 - [x] Distributed Category Breakdown - Hierarchical table
 - [x] Theme support for all components
 - [x] Mobile responsive design
@@ -187,7 +187,64 @@ Track feature completion status and implementation details.
 - Hierarchical tables support expand/collapse by category
 - Spending Trends deferred to Phase 2.4.2
 
-#### Phase 2.4.2: Advanced Dashboard (Future)
+#### Phase 2.4.2: Admin General Settings ✅ COMPLETE
+
+**Frontend Components**
+- [x] ManageGeneral.jsx - General settings tab (first/default in Admin > Settings)
+- [x] Toggle for "Show Additional Cost Field"
+- [x] Text input for custom field name
+
+**Backend**
+- [x] GET /api/settings/general - Fetch general settings
+- [x] PUT /api/settings/general - Save general settings
+- [x] Settings stored in AppSettings table
+
+**Database**
+- [x] Migration 006 - Added additionalCost field to GACosts table
+- [x] Seeding is now fully idempotent (no destructive deletes)
+
+**G&A Costs Integration**
+- [x] GACostsForm - Conditionally shows additionalCost field
+- [x] GACostsTable - Shows additional cost column, no currency conversion
+- [x] Budget calculations include additionalCost: Total (CAD) = (Budget + Additional Cost) × rate
+- [x] Dashboard calculations include additionalCost
+
+**Backend API Updates**
+- [x] All gacostsController endpoints return additionalCost field
+- [x] Create and update endpoints handle additionalCost
+
+#### Phase 2.4.3: Actuals Management ✅ COMPLETE
+
+**Frontend Components**
+- [x] ManageActualsModal - Modal for managing actual cost entries
+- [x] Edit/Delete buttons for individual entries
+- [x] Running total display
+- [x] Form for adding new actual entries (amount, date, description)
+- [x] "Update Actuals" icon integrated in GACostsTable
+
+**Backend**
+- [x] Migration 007 - GACostsActualDetails table (id, gaCostId, amount, entryDate, description)
+- [x] GET /api/gacosts/:id/actuals - Fetch all actual details + total
+- [x] POST /api/gacosts/:id/actuals - Add new actual entry
+- [x] PUT /api/gacosts/:id/actuals/:actualId - Update entry
+- [x] DELETE /api/gacosts/:id/actuals/:actualId - Delete entry
+- [x] Auto-update GACostsActual.totalAmount when details change
+
+**Integration**
+- [x] Icon in Actions column (purple chart-line icon)
+- [x] Modal displays all entries with amounts, dates, descriptions
+- [x] Each entry has Edit/Delete options
+- [x] Form validation (amount, date required)
+- [x] Transaction-based updates for data consistency
+- [x] Running total updates automatically
+
+**Notes**
+- Supports multiple monthly/periodic entries per G&A Cost
+- Each entry tracks amount, date, and optional description
+- ActualTotal = sum of all GACostsActualDetails entries
+- NOT shown in create form (only for existing costs)
+
+#### Phase 2.4.4: Advanced Dashboard (Future)
 - [ ] Spending Trends (line chart, monthly/YoY)
 - [ ] Project Status Summary
 - [ ] Date range selector
@@ -318,18 +375,18 @@ Track feature completion status and implementation details.
 
 | Metric | Value |
 |--------|-------|
-| Backend Routes Created | 19 (health, info, gacosts CRUD, settings, categories, currencies, majorminor) |
-| Backend Controllers | 4 (gacostsController, categoriesController, configController, settingsController) |
-| Frontend Components | 22 (Dashboard, GACosts, Admin, Dashboard subcomponents, common components) |
+| Backend Routes Created | 25 (health, info, gacosts CRUD, actuals CRUD, settings including general, categories, currencies, majorminor) |
+| Backend Controllers | 5 (gacostsController, categoriesController, configController, settingsController, actualsController) |
+| Frontend Components | 25 (Dashboard, GACosts, Admin, Dashboard subcomponents, common components, ManageGeneral, ManageActualsModal) |
 | Frontend Pages | 3 (Dashboard, GACosts, Admin/Settings) |
-| Database Tables | 12 (Users, Permissions, GACosts, Categories, SubCategories, Currencies, MajorMinor, AppSettings, + budgets/actuals tables) |
-| Database Migrations | 6 (schema, categories, gacosts updates, majorminor, appSettings, gacosts category) |
+| Database Tables | 13 (Users, Permissions, GACosts, Categories, SubCategories, Currencies, MajorMinor, AppSettings, GACostsActualDetails, + budgets/actuals tables) |
+| Database Migrations | 8 (schema, categories, gacosts updates, majorminor, appSettings, gacosts category, additionalCost, actual details) |
 | Utility Files | 6 (api.js, formatters.js, themes.js, currencyList.js, hooks/) |
 | Custom Hooks | 2 (useApi, useTheme) |
 | Context Providers | 2 (ThemeContext, ThemeProvider) |
 | Tests Written | 0 |
-| Git Commits | 8+ |
-| Documentation Pages | 4 (RAD.md, Prompts.md, Features-Tracker.md, DOCUMENTATION-UPDATES.md) |
+| Git Commits | 9+ |
+| Documentation Pages | 5 (RAD.md, Prompts.md, Features-Tracker.md, DOCUMENTATION-UPDATES.md, SETUP.md) |
 | npm Packages Added | recharts (for dashboard charts) |
 
 ---
@@ -355,20 +412,20 @@ Track feature completion status and implementation details.
 
 ### By Numbers
 - **Total Features:** 65
-- **Completed:** 52+ (Phase 1 + Phase 2.1 + Phase 2.2 + Phase 2.4.1)
+- **Completed:** 59+ (Phase 1 + Phase 2.1 + Phase 2.2 + Phase 2.4.1 + Phase 2.4.2 + Phase 2.4.3)
 - **In Progress:** 0
 - **Blocked:** 0
-- **Planned:** 13
+- **Planned:** 6
 
 ### Overall Progress
 ```
 Phase 1 (Foundation):   ████████████████████ 100% ✅
-Phase 2 (Core):         ███████████░░░░░░░░░  60% (2.1 + 2.2 + 2.4.1 complete)
+Phase 2 (Core):         █████████████████░░░  75% (2.1 + 2.2 + 2.4.1-2.4.3 complete, 2.3 pending)
 Phase 3 (Auth):         ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 4 (Advanced):     ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 5 (Deployment):   ░░░░░░░░░░░░░░░░░░░░   0%
 
-Overall: 46% complete (Phase 1 + Phase 2.1-2.2 + Phase 2.4.1 complete)
+Overall: 52% complete (Phase 1 + Phase 2.1-2.2 + Phase 2.4.1-2.4.3 complete)
 ```
 
 ---

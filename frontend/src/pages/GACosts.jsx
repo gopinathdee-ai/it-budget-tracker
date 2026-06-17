@@ -34,6 +34,10 @@ export default function GACostsPage() {
     setRefreshKey(k => k + 1);
   };
 
+  const handleActualsChange = () => {
+    setRefreshKey(k => k + 1);
+  };
+
   const isLightTheme = currentTheme === 'light-clean';
   const textColor = isLightTheme ? 'text-slate-900' : 'text-white';
   const textMuted = isLightTheme ? 'text-slate-600' : 'text-slate-400';
@@ -95,6 +99,7 @@ export default function GACostsPage() {
         <GACostsTable
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onActualsChange={handleActualsChange}
           refreshTrigger={refreshKey}
           selectedYear={selectedYear}
         />

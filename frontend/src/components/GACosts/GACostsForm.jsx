@@ -17,7 +17,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
     vendor: '',
     version: '',
     budgetMaintenance: '',
-    budgetNew: ''
+    budgetNew: '',
+    additionalCost: ''
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
@@ -25,6 +26,7 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
   const [subcategories, setSubcategories] = useState([]);
   const [currencies, setCurrencies] = useState([]);
   const [majorMinors, setMajorMinors] = useState([]);
+  const [generalSettings, setGeneralSettings] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const { request, loading } = useApi();
 
@@ -32,14 +34,16 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
     const fetchData = async () => {
       try {
         setLoadingData(true);
-        const [catsRes, currRes, mmRes] = await Promise.all([
+        const [catsRes, currRes, mmRes, settingsRes] = await Promise.all([
           request('GET', '/api/categories'),
           request('GET', '/api/config/currencies'),
-          request('GET', '/api/config/majorminor')
+          request('GET', '/api/config/majorminor'),
+          request('GET', '/api/settings/general')
         ]);
         setCategories(catsRes.data || []);
         setCurrencies(currRes.data || []);
         setMajorMinors(mmRes.data || []);
+        setGeneralSettings(settingsRes.data || {});
       } catch (err) {
         setError('Failed to load form data');
       } finally {
@@ -77,7 +81,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
         vendor: cost.vendor || '',
         version: cost.version || '',
         budgetMaintenance: cost.budgetMaintenance || '',
-        budgetNew: cost.budgetNew || ''
+        budgetNew: cost.budgetNew || '',
+        additionalCost: cost.additionalCost || ''
       });
     }
   }, [cost]);
@@ -112,7 +117,8 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
         vendor: formData.vendor.trim(),
         version: formData.version,
         budgetMaintenance: formData.budgetMaintenance ? parseFloat(formData.budgetMaintenance) : 0,
-        budgetNew: formData.budgetNew ? parseFloat(formData.budgetNew) : 0
+        budgetNew: formData.budgetNew ? parseFloat(formData.budgetNew) : 0,
+        additionalCost: formData.additionalCost ? parseFloat(formData.additionalCost) : 0
       };
 
       if (cost) {
@@ -277,6 +283,25 @@ export default function GACostsForm({ cost, onSuccess, onCancel }) {
             className="w-full px-3 py-2 border border-slate-700/50 rounded-lg rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        {/* Additional Cost (Conditional) */}
+        {generalSettings?.showAdditionalCost && (
+          <div>
+            <label className="block text-sm font-semibold text-slate-200 mb-2">
+              {generalSettings?.additionalCostFieldName || 'Additional Cost'}
+            </label>
+            <input
+              type="number"
+              name="additionalCost"
+              value={formData.additionalCost}
+              onChange={handleChange}
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              className="w-full px-3 py-2 border border-slate-700/50 rounded-lg rounded-md bg-slate-900 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        )}
 
         {/* Type (Cost Type) */}
         <div>

@@ -15,32 +15,10 @@ export async function seed(knex) {
   // Instead, insert only if not exists to preserve production data
   
   console.log('');
-  console.log('Step 1: Creating admin roles...');
+  console.log('Step 1: Creating role-based permissions (RBAC)...');
 
-  // Insert roles (admin reference data)
-  // In production, these might already exist - use insertOrIgnore
-  try {
-    await knex('Permissions').where({}).del(); // Clear for fresh seed
-    
-    // Define all roles in the system
-    const roles = ['Admin', 'Reporting', 'DataEntry'];
-    
-    for (const role of roles) {
-      // Check if role has any permissions already
-      const existing = await knex('Permissions').where({ role }).first();
-      if (!existing) {
-        console.log(`   • Creating permissions for role: ${role}`);
-      }
-    }
-  } catch (error) {
-    console.log('   ℹ️  Permissions table may already exist');
-  }
-
-  console.log('');
-  console.log('Step 2: Creating role-based permissions (RBAC)...');
-
-  // Insert role-based permissions
-  // These define what each role can do
+  // Define all required default permissions
+  // Only insert if they don't already exist (idempotent)
   const permissions = [
     // Admin permissions - FULL ACCESS
     { role: 'Admin', resource: 'ga_costs', action: 'create' },
@@ -71,11 +49,30 @@ export async function seed(knex) {
     { role: 'DataEntry', resource: 'projects', action: 'read' },
   ];
 
-  await knex('Permissions').insert(permissions);
-  console.log(`   ✅ Created ${permissions.length} role-based permissions`);
+  let insertedCount = 0;
+  for (const permission of permissions) {
+    const existing = await knex('Permissions')
+      .where({
+        role: permission.role,
+        resource: permission.resource,
+        action: permission.action
+      })
+      .first();
+
+    if (!existing) {
+      await knex('Permissions').insert(permission);
+      insertedCount++;
+    }
+  }
+
+  if (insertedCount > 0) {
+    console.log(`   ✅ Created ${insertedCount} new role-based permissions`);
+  } else {
+    console.log(`   ℹ️  All ${permissions.length} default permissions already exist`);
+  }
 
   console.log('');
-  console.log('Step 3: Creating admin user...');
+  console.log('Step 2: Creating admin user...');
 
   // Create primary admin user
   const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
@@ -108,7 +105,7 @@ export async function seed(knex) {
   }
 
   console.log('');
-  console.log('Step 4: Creating glassbreak admin user...');
+  console.log('Step 3: Creating glassbreak admin user...');
 
   // Create glassbreak admin user (emergency access)
   // This is a "break glass" admin account for emergencies
@@ -142,7 +139,7 @@ export async function seed(knex) {
   }
 
   console.log('');
-  console.log('Step 5: Creating base currency (CAD)...');
+  console.log('Step 4: Creating base currency (CAD)...');
 
   // Insert mandatory base currency (CAD only)
   // Other currencies should be added via the Admin Settings UI
@@ -163,18 +160,32 @@ export async function seed(knex) {
   }
 
   console.log('');
-  console.log('Step 6: Setting system-level app settings...');
+  console.log('Step 5: Setting system-level app settings...');
 
   // Insert system-level settings (theme, etc.)
+  // Only insert if they don't already exist (idempotent)
   const appSettings = [
     { setting: 'theme', value: 'dark-blue' }
   ];
 
   try {
-    // Delete existing settings and re-insert to ensure fresh state
-    await knex('AppSettings').del();
-    await knex('AppSettings').insert(appSettings);
-    console.log(`   ✅ Initialized ${appSettings.length} app settings`);
+    let settingsCount = 0;
+    for (const setting of appSettings) {
+      const existing = await knex('AppSettings')
+        .where({ setting: setting.setting })
+        .first();
+
+      if (!existing) {
+        await knex('AppSettings').insert(setting);
+        settingsCount++;
+      }
+    }
+
+    if (settingsCount > 0) {
+      console.log(`   ✅ Initialized ${settingsCount} new app settings`);
+    } else {
+      console.log(`   ℹ️  All default app settings already exist`);
+    }
   } catch (error) {
     console.error('   ❌ Error setting app settings:', error.message);
   }

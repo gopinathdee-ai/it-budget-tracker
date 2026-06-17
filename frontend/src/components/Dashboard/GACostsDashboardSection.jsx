@@ -18,6 +18,7 @@ export default function GACostsDashboardSection({ selectedYear }) {
   const [error, setError] = useState(null);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [expandedSubCategory, setExpandedSubCategory] = useState(null);
+  const [currencies, setCurrencies] = useState([]);
   const { currentTheme } = useContext(ThemeContext);
   const { request, loading } = useApi();
   const isLightTheme = currentTheme === 'light-clean';
@@ -27,8 +28,28 @@ export default function GACostsDashboardSection({ selectedYear }) {
   const cardBg = isLightTheme ? 'bg-slate-100/50 border-slate-300' : 'bg-slate-800/50 border-slate-700';
 
   useEffect(() => {
-    fetchData();
-  }, [selectedYear]);
+    const fetchCurrencies = async () => {
+      try {
+        const response = await request('GET', '/api/config/currencies');
+        setCurrencies(response.data || []);
+      } catch (err) {
+        console.error('Failed to load currencies');
+      }
+    };
+    fetchCurrencies();
+  }, [request]);
+
+  useEffect(() => {
+    if (currencies.length > 0) {
+      fetchData();
+    }
+  }, [selectedYear, currencies, request]);
+
+  const getConversionRate = (currency) => {
+    if (currency === 'CAD') return 1;
+    const curr = currencies.find(c => c.code === currency);
+    return curr?.conversionRate || 1;
+  };
 
   const fetchData = async () => {
     try {
@@ -43,26 +64,28 @@ export default function GACostsDashboardSection({ selectedYear }) {
         const categoryName = item.categoryName || 'Unknown';
         const subCategoryName = item.subCategoryName || 'Uncategorized';
         const softwareName = item.serviceSoftware || 'Unknown';
+        const rate = getConversionRate(item.currency);
+        const budgetWithAdditional = ((item.budgetTotal || 0) + (item.additionalCost || 0)) * rate;
 
-        type.budget += item.budgetTotal || 0;
+        type.budget += budgetWithAdditional;
         type.actual += item.actualTotal || 0;
 
         if (!type.categories[categoryName]) {
           type.categories[categoryName] = { budget: 0, actual: 0, subCategories: {} };
         }
-        type.categories[categoryName].budget += item.budgetTotal || 0;
+        type.categories[categoryName].budget += budgetWithAdditional;
         type.categories[categoryName].actual += item.actualTotal || 0;
 
         if (!type.categories[categoryName].subCategories[subCategoryName]) {
           type.categories[categoryName].subCategories[subCategoryName] = { budget: 0, actual: 0, software: {} };
         }
-        type.categories[categoryName].subCategories[subCategoryName].budget += item.budgetTotal || 0;
+        type.categories[categoryName].subCategories[subCategoryName].budget += budgetWithAdditional;
         type.categories[categoryName].subCategories[subCategoryName].actual += item.actualTotal || 0;
 
         if (!type.categories[categoryName].subCategories[subCategoryName].software[softwareName]) {
           type.categories[categoryName].subCategories[subCategoryName].software[softwareName] = { budget: 0, actual: 0 };
         }
-        type.categories[categoryName].subCategories[subCategoryName].software[softwareName].budget += item.budgetTotal || 0;
+        type.categories[categoryName].subCategories[subCategoryName].software[softwareName].budget += budgetWithAdditional;
         type.categories[categoryName].subCategories[subCategoryName].software[softwareName].actual += item.actualTotal || 0;
       });
 
@@ -93,9 +116,9 @@ export default function GACostsDashboardSection({ selectedYear }) {
         {/* Header */}
         <div className="grid grid-cols-4 gap-2 px-3 py-2">
           <div className={`text-left font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Category / SubCategory / Software</div>
-          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget</div>
-          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Actual</div>
-          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Variance</div>
+          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Budget (CAD)</div>
+          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Actual (CAD)</div>
+          <div className={`text-right font-semibold text-xs ${isLightTheme ? 'text-slate-800' : 'text-slate-300'}`}>Variance (CAD)</div>
         </div>
 
         {/* Rows */}
@@ -214,7 +237,7 @@ export default function GACostsDashboardSection({ selectedYear }) {
 
             {/* Retained Summary Card */}
             <div className={`${cardBg} p-6 rounded-2xl shadow-lg border bg-gradient-to-br from-blue-900/30 to-blue-800/20`}>
-              <h3 className={`text-sm font-semibold mb-4 text-blue-300`}>Retained</h3>
+              <h3 className={`text-sm font-semibold mb-4 text-blue-300`}>Retained (CAD)</h3>
               <div className="space-y-3">
                 <div>
                   <p className={`text-xs ${isLightTheme ? 'text-slate-600' : 'text-slate-400'} mb-1`}>Budget</p>
@@ -235,7 +258,7 @@ export default function GACostsDashboardSection({ selectedYear }) {
 
             {/* Distributed Summary Card */}
             <div className={`${cardBg} p-6 rounded-2xl shadow-lg border bg-gradient-to-br from-emerald-900/30 to-emerald-800/20`}>
-              <h3 className={`text-sm font-semibold mb-4 text-emerald-300`}>Distributed</h3>
+              <h3 className={`text-sm font-semibold mb-4 text-emerald-300`}>Distributed (CAD)</h3>
               <div className="space-y-3">
                 <div>
                   <p className={`text-xs ${isLightTheme ? 'text-slate-600' : 'text-slate-400'} mb-1`}>Budget</p>

@@ -13,8 +13,8 @@
     "migrate:latest": "knex migrate:latest",
     "seed:mandatory": "knex seed:run --specific=002_mandatory_seed.js",
     "seed:optional": "knex seed:run --specific=003_optional_seed.js",
-    "db:setup": "npm run migrate:latest && npm run seed:mandatory && npm run seed:optional",
-    "db:reset": "npm run migrate:rollback --all && npm run migrate:latest && npm run seed:mandatory && npm run seed:optional"
+    "db:setup": "npm run migrate:latest && npm run seed:mandatory",
+    "db:reset": "npm run migrate:rollback --all && npm run migrate:latest && npm run seed:mandatory"
   },
   "dependencies": {
     "express": "^4.18.2",

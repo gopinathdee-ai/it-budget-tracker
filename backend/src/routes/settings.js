@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAppTheme, updateAppTheme } from '../controllers/settingsController.js';
+import { getAppTheme, updateAppTheme, getGeneralSettings, updateGeneralSettings } from '../controllers/settingsController.js';
 
 const router = express.Router();
 
@@ -8,5 +8,11 @@ router.get('/theme', getAppTheme);
 
 // Update system theme
 router.put('/theme', updateAppTheme);
+
+// Get general settings
+router.get('/general', getGeneralSettings);
+
+// Update general settings
+router.put('/general', updateGeneralSettings);
 
 export default router;

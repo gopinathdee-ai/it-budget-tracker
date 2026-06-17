@@ -53,8 +53,8 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
 
       (response.data || []).forEach(item => {
         const rate = getConversionRate(item.currency);
-        const budgetCAD = (item.budgetTotal || 0) * rate;
-        const actualCAD = (item.actualTotal || 0) * rate;
+        const budgetCAD = ((item.budgetTotal || 0) + (item.additionalCost || 0)) * rate;
+        const actualCAD = item.actualTotal || 0;
 
         totalBudget += budgetCAD;
         totalActual += actualCAD;
@@ -97,7 +97,7 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
           <div className="card p-6 bg-gradient-to-br from-blue-900/50 to-blue-800/40 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Total Budget (CAD)</p>
+                <p className="text-xs font-semibold text-blue-300 mb-1 uppercase tracking-wide">Budget (CAD)</p>
                 <p className="text-xl font-bold text-white truncate"><Number>{formatCurrency(summary.totalBudget)}</Number></p>
               </div>
               <FaBriefcase className="text-2xl text-blue-400 opacity-60 flex-shrink-0 mt-1" />

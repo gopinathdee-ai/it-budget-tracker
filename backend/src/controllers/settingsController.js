@@ -45,3 +45,58 @@ export const updateAppTheme = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getGeneralSettings = async (req, res, next) => {
+  try {
+    const showAdditionalCostSetting = await db('AppSettings').where({ setting: 'showAdditionalCost' }).first();
+    const fieldNameSetting = await db('AppSettings').where({ setting: 'additionalCostFieldName' }).first();
+
+    res.json({
+      success: true,
+      data: {
+        showAdditionalCost: showAdditionalCostSetting?.value === 'true' || false,
+        additionalCostFieldName: fieldNameSetting?.value || 'Additional Cost'
+      },
+      meta: { timestamp: new Date().toISOString() }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateGeneralSettings = async (req, res, next) => {
+  try {
+    const { showAdditionalCost, additionalCostFieldName } = req.body;
+
+    if (showAdditionalCost !== undefined) {
+      const updated = await db('AppSettings')
+        .where({ setting: 'showAdditionalCost' })
+        .update({ value: String(showAdditionalCost), updatedAt: db.fn.now() });
+
+      if (updated === 0) {
+        await db('AppSettings').insert({ setting: 'showAdditionalCost', value: String(showAdditionalCost) });
+      }
+    }
+
+    if (additionalCostFieldName !== undefined) {
+      const updated = await db('AppSettings')
+        .where({ setting: 'additionalCostFieldName' })
+        .update({ value: additionalCostFieldName, updatedAt: db.fn.now() });
+
+      if (updated === 0) {
+        await db('AppSettings').insert({ setting: 'additionalCostFieldName', value: additionalCostFieldName });
+      }
+    }
+
+    res.json({
+      success: true,
+      data: {
+        showAdditionalCost: showAdditionalCost !== undefined ? showAdditionalCost : undefined,
+        additionalCostFieldName: additionalCostFieldName || 'Additional Cost'
+      },
+      meta: { timestamp: new Date().toISOString() }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
