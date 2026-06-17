@@ -218,31 +218,63 @@ Track feature completion status and implementation details.
 **Frontend Components**
 - [x] ManageActualsModal - Modal for managing actual cost entries
 - [x] Edit/Delete buttons for individual entries
-- [x] Running total display
-- [x] Form for adding new actual entries (amount, date, description)
+- [x] Pagination support (3 entries per page)
+- [x] Running total display (CAD converted)
+- [x] Form for adding new actual entries (amount, date, description, currency)
+- [x] Currency selector dropdown in form (all currencies from config)
 - [x] "Update Actuals" icon integrated in GACostsTable
+- [x] Each entry displays with original currency (e.g., "$2,000.00 USD")
+- [x] Modern, compact date picker with custom CSS styling (react-datepicker)
+- [x] Theme support (light/dark modes) in date picker
 
 **Backend**
 - [x] Migration 007 - GACostsActualDetails table (id, gaCostId, amount, entryDate, description)
-- [x] GET /api/gacosts/:id/actuals - Fetch all actual details + total
-- [x] POST /api/gacosts/:id/actuals - Add new actual entry
-- [x] PUT /api/gacosts/:id/actuals/:actualId - Update entry
+- [x] Migration 008 - Add currency column to GACostsActualDetails (defaults to 'CAD')
+- [x] GET /api/gacosts/:id/actuals - Fetch all actual details + CAD-converted total
+- [x] POST /api/gacosts/:id/actuals - Add new actual entry with currency support
+- [x] PUT /api/gacosts/:id/actuals/:actualId - Update entry including currency
 - [x] DELETE /api/gacosts/:id/actuals/:actualId - Delete entry
-- [x] Auto-update GACostsActual.totalAmount when details change
+- [x] Auto-update GACostsActual.totalAmount (in CAD) when details change
+- [x] Transaction-based CRUD operations for consistency
+- [x] Multi-currency conversion using exchange rates from Currencies table
+
+**Multi-Currency Support**
+- [x] Each actual entry can be in a different currency (CAD, USD, GBP, etc.)
+- [x] Backend converts all entries to CAD for storage and calculation
+- [x] Modal displays total in CAD (sum of all entries converted)
+- [x] Dashboard displays actuals in CAD (no double conversion)
+- [x] Parent table displays actuals in CAD (no double conversion)
 
 **Integration**
 - [x] Icon in Actions column (purple chart-line icon)
-- [x] Modal displays all entries with amounts, dates, descriptions
-- [x] Each entry has Edit/Delete options
-- [x] Form validation (amount, date required)
+- [x] Modal displays all entries with amounts, currencies, dates, descriptions
+- [x] Each entry has Edit/Delete options with pagination
+- [x] Form validation (amount, date required; currency required)
 - [x] Transaction-based updates for data consistency
-- [x] Running total updates automatically
+- [x] Running total updates automatically after each operation
+- [x] Dashboard and table refresh when actuals change
+
+**Bug Fixes**
+- [x] Fixed double-currency conversion in dashboard (actualTotal already in CAD)
+- [x] Fixed double-currency conversion in parent table (actualTotal already in CAD)
+- [x] Fixed GACostsDashboardSection to convert budgets to CAD before summing
+- [x] Added currency field to actual entries (previously missing)
+- [x] Implemented proper currency conversion in backend (all actuals → CAD)
+
+**UI/UX Enhancements**
+- [x] Added "(CAD)" labels throughout dashboard and tables for clarity
+- [x] Compact date picker (small gaps, reduced padding)
+- [x] Pagination with Prev/Next buttons (3 entries per page)
+- [x] Currency display on each entry (e.g., "USD", "CAD", "GBP")
+- [x] Form fields organized in grid layout
+- [x] Loading and error states
 
 **Notes**
 - Supports multiple monthly/periodic entries per G&A Cost
-- Each entry tracks amount, date, and optional description
-- ActualTotal = sum of all GACostsActualDetails entries
+- Each entry tracks amount, date, currency, and optional description
+- ActualTotal = sum of all GACostsActualDetails entries converted to CAD
 - NOT shown in create form (only for existing costs)
+- All dashboard/table displays are in CAD with proper labeling
 
 #### Phase 2.4.4: Advanced Dashboard (Future)
 - [ ] Spending Trends (line chart, monthly/YoY)
@@ -375,19 +407,20 @@ Track feature completion status and implementation details.
 
 | Metric | Value |
 |--------|-------|
-| Backend Routes Created | 25 (health, info, gacosts CRUD, actuals CRUD, settings including general, categories, currencies, majorminor) |
+| Backend Routes Created | 29 (health, info, gacosts CRUD, actuals CRUD, settings including general, categories, currencies, majorminor) |
 | Backend Controllers | 5 (gacostsController, categoriesController, configController, settingsController, actualsController) |
-| Frontend Components | 25 (Dashboard, GACosts, Admin, Dashboard subcomponents, common components, ManageGeneral, ManageActualsModal) |
+| Frontend Components | 26 (Dashboard, GACosts, Admin, Dashboard subcomponents, common components, ManageGeneral, ManageActualsModal, GACostsDashboardSection) |
 | Frontend Pages | 3 (Dashboard, GACosts, Admin/Settings) |
 | Database Tables | 13 (Users, Permissions, GACosts, Categories, SubCategories, Currencies, MajorMinor, AppSettings, GACostsActualDetails, + budgets/actuals tables) |
-| Database Migrations | 8 (schema, categories, gacosts updates, majorminor, appSettings, gacosts category, additionalCost, actual details) |
+| Database Migrations | 8 (schema, categories, gacosts updates, majorminor, appSettings, gacosts category, additionalCost, actual details, currency field) |
 | Utility Files | 6 (api.js, formatters.js, themes.js, currencyList.js, hooks/) |
 | Custom Hooks | 2 (useApi, useTheme) |
 | Context Providers | 2 (ThemeContext, ThemeProvider) |
+| CSS Files | 1 (datepicker.css - custom styling for react-datepicker) |
 | Tests Written | 0 |
-| Git Commits | 9+ |
+| Git Commits | 10+ |
 | Documentation Pages | 5 (RAD.md, Prompts.md, Features-Tracker.md, DOCUMENTATION-UPDATES.md, SETUP.md) |
-| npm Packages Added | recharts (for dashboard charts) |
+| npm Packages Added | recharts (for dashboard charts), react-datepicker (date picker) |
 
 ---
 
@@ -411,21 +444,21 @@ Track feature completion status and implementation details.
 ## Quick Status
 
 ### By Numbers
-- **Total Features:** 65
-- **Completed:** 59+ (Phase 1 + Phase 2.1 + Phase 2.2 + Phase 2.4.1 + Phase 2.4.2 + Phase 2.4.3)
+- **Total Features:** 70
+- **Completed:** 63+ (Phase 1 + Phase 2.1 + Phase 2.2 + Phase 2.4.1-2.4.3 with enhancements)
 - **In Progress:** 0
 - **Blocked:** 0
-- **Planned:** 6
+- **Planned:** 7
 
 ### Overall Progress
 ```
 Phase 1 (Foundation):   ████████████████████ 100% ✅
-Phase 2 (Core):         █████████████████░░░  75% (2.1 + 2.2 + 2.4.1-2.4.3 complete, 2.3 pending)
+Phase 2 (Core):         ██████████████████░░░ 80% (2.1 + 2.2 + 2.4.1-2.4.3 complete, 2.3 pending)
 Phase 3 (Auth):         ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 4 (Advanced):     ░░░░░░░░░░░░░░░░░░░░   0%
 Phase 5 (Deployment):   ░░░░░░░░░░░░░░░░░░░░   0%
 
-Overall: 52% complete (Phase 1 + Phase 2.1-2.2 + Phase 2.4.1-2.4.3 complete)
+Overall: 56% complete (Phase 1 + Phase 2.1-2.2 + Phase 2.4.1-2.4.3 with multi-currency support)
 ```
 
 ---
