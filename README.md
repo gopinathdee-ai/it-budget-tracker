@@ -31,7 +31,7 @@ An enterprise IT budget management application with multi-year planning, G&A cos
 3. **Initialize database:**
    ```bash
    cd backend
-   npm run migrate
+   npm run db:setup
    ```
 
 4. **Start development servers:**

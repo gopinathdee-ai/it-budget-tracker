@@ -47,12 +47,27 @@ npm install
 
 Run migrations:
 ```bash
-npm run migrate
+npm run db:migrate
 ```
 
-Rollback migrations (if needed):
+Seed with mandatory data:
 ```bash
-npm run migrate:rollback
+npm run db:seed:mandatory
+```
+
+Seed with optional test data:
+```bash
+npm run db:seed:optional
+```
+
+Or setup everything at once:
+```bash
+npm run db:setup
+```
+
+Reset database to clean state:
+```bash
+npm run db:reset
 ```
 
 ### 3. Start the Server
@@ -75,10 +90,16 @@ Each migration file has:
 - `up()` - Runs the migration
 - `down()` - Rolls back the migration
 
+### Checking Migration Status
+
+```bash
+npm run db:status
+```
+
 ### Creating a New Migration
 
 ```bash
-npm run migrate:make create_my_table
+knex migrate:make create_my_table
 ```
 
 This creates a new migration file in `src/database/migrations/`.

@@ -10,11 +10,14 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "migrate:latest": "knex migrate:latest",
-    "seed:mandatory": "knex seed:run --specific=002_mandatory_seed.js",
-    "seed:optional": "knex seed:run --specific=003_optional_seed.js",
-    "db:setup": "npm run migrate:latest && npm run seed:mandatory",
-    "db:reset": "npm run migrate:rollback --all && npm run migrate:latest && npm run seed:mandatory"
+    "db:migrate": "knex migrate:latest",
+    "db:seed:mandatory": "knex seed:run --specific=002_mandatory_seed.js",
+    "db:seed:optional": "knex seed:run --specific=003_optional_seed.js",
+    "db:status": "knex migrate:status",
+    "db:rollback": "knex migrate:rollback",
+    "db:rollback:all": "knex migrate:rollback --all",
+    "db:setup": "npm run db:migrate && npm run db:seed:mandatory",
+    "db:reset": "npm run db:rollback:all && npm run db:migrate && npm run db:seed:mandatory"
   },
   "dependencies": {
     "express": "^4.18.2",
