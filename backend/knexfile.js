@@ -10,10 +10,10 @@ export default {
   development: {
     client: 'mssql',
     connection: {
-      server: 'localhost',
-      database: process.env.DATABASE_NAME || 'ITBudgetDB',
-      user: process.env.DATABASE_USER || 'itbudgetadmin',
-      password: process.env.DATABASE_PASSWORD || 'YourPassword123!',
+      server: process.env.DATABASE_HOST,
+      database: process.env.DATABASE_NAME,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
       options: {
         trustServerCertificate: true,
         encrypt: false,
