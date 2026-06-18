@@ -20,6 +20,22 @@ Update the values in `.env` for your development environment:
 - `JWT_SECRET` - JWT signing secret (min 32 characters)
 - `SESSION_SECRET` - Session signing secret (min 32 characters)
 
+#### Generating Secure Secrets
+
+**JWT_SECRET** and **SESSION_SECRET** should be unique, random, and at least 32 characters. Generate them with PowerShell:
+
+```powershell
+# Generate JWT_SECRET (base64-encoded random bytes)
+$jwt = [Convert]::ToBase64String([byte[]](1..32 | ForEach-Object {Get-Random -Maximum 256}))
+Write-Output "JWT_SECRET=$jwt"
+
+# Generate SESSION_SECRET (base64-encoded random bytes)
+$session = [Convert]::ToBase64String([byte[]](1..32 | ForEach-Object {Get-Random -Maximum 256}))
+Write-Output "SESSION_SECRET=$session"
+```
+
+Copy the output and paste into your `.env` file, replacing the placeholder values.
+
 **Important**: Never commit `.env` to version control. It's already in `.gitignore`.
 
 ### 2. Database Setup
