@@ -18,8 +18,13 @@ export const up = async function(knex) {
 };
 
 export const down = async function(knex) {
+  const hasSubCategoryColumn = await knex.schema.hasColumn('GACosts', 'subCategoryId');
+
+  if (!hasSubCategoryColumn) {
+    return;
+  }
+
   return knex.schema.table('GACosts', (table) => {
-    table.dropForeign(['subCategoryId']);
     table.dropColumn('subCategoryId');
   });
 };
