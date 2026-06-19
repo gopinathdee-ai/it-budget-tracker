@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { FaPlus, FaTimes, FaEdit, FaTrash, FaCalendarAlt, FaDollarSign, FaFileAlt } from 'react-icons/fa';
+import { FaTimes, FaEdit, FaTrash, FaCalendarAlt, FaDollarSign, FaFileAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../../styles/datepicker.css';

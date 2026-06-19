@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -17,11 +17,7 @@ export default function ManageMajorMinor() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, id: null });
   const { request, loading } = useApi();
 
-  useEffect(() => {
-    fetchMajorMinors();
-  }, []);
-
-  const fetchMajorMinors = async () => {
+  const fetchMajorMinors = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', '/api/config/majorminor');
@@ -29,7 +25,11 @@ export default function ManageMajorMinor() {
     } catch (err) {
       setError('Failed to load Major.Minor codes');
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    fetchMajorMinors();
+  }, [fetchMajorMinors]);
 
   const handleAddMajorMinor = async (e) => {
     e.preventDefault();

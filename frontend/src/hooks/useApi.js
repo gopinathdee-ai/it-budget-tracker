@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useRef } from 'react';
 import apiClient from '../utils/api.js';
 
 export function useApi() {

@@ -20,17 +20,13 @@ export default function GACostsTable({ onEdit, onDelete, onActualsChange, refres
   const [filters, setFilters] = useState({ year: selectedYear?.toString() || '', category: '', costType: '' });
   const [error, setError] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [deleting, setDeleting] = useState(false);
   const [currencies, setCurrencies] = useState([]);
   const [generalSettings, setGeneralSettings] = useState(null);
   const [actualsModal, setActualsModal] = useState({ isOpen: false, gaCostId: null, serviceSoftware: '' });
   const { currentTheme } = useContext(ThemeContext);
   const { request, loading } = useApi();
   const isLightTheme = currentTheme === 'light-clean';
-  const textColor = isLightTheme ? 'text-slate-900' : 'text-slate-300';
   const headerBg = isLightTheme ? 'bg-slate-100' : 'bg-gradient-to-r from-slate-900/80 to-slate-800/80';
-  const tableBg = isLightTheme ? 'bg-slate-50/50' : 'bg-slate-800/50';
-  const rowBg = isLightTheme ? 'bg-slate-100/50 hover:bg-slate-200/50' : 'bg-slate-800/30 hover:bg-slate-700/40';
 
   useEffect(() => {
     const fetchSettings = async () => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { FaCog } from 'react-icons/fa';
 import { ThemeContext } from '../../contexts/ThemeContext.js';
 import { useApi } from '../../hooks/useApi.js';
@@ -18,11 +18,7 @@ export default function ManageGeneral() {
   const inputBg = isLightTheme ? 'bg-white border-slate-300' : 'bg-slate-900 border-slate-700';
   const labelColor = isLightTheme ? 'text-slate-700' : 'text-slate-300';
 
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       setLoading(true);
       const response = await request('GET', '/api/settings/general');
@@ -34,7 +30,11 @@ export default function ManageGeneral() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
 
   const handleToggle = (field) => {
     setSettings(prev => ({

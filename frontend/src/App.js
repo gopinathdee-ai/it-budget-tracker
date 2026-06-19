@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from './hooks/useTheme';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { ThemeContext } from '../../contexts/ThemeContext.js';
@@ -23,7 +23,6 @@ export default function GACostsDashboardSection({ selectedYear }) {
   const { request, loading } = useApi();
   const isLightTheme = currentTheme === 'light-clean';
   const textColor = isLightTheme ? 'text-slate-900' : 'text-white';
-  const headerBg = isLightTheme ? 'bg-slate-100' : 'bg-slate-900/50';
   const rowBg = isLightTheme ? 'border-slate-300/50 hover:bg-slate-200/30' : 'border-slate-700/50 hover:bg-slate-700/30';
   const cardBg = isLightTheme ? 'bg-slate-100/50 border-slate-300' : 'bg-slate-800/50 border-slate-700';
 
@@ -39,19 +38,13 @@ export default function GACostsDashboardSection({ selectedYear }) {
     fetchCurrencies();
   }, [request]);
 
-  useEffect(() => {
-    if (currencies.length > 0) {
-      fetchData();
-    }
-  }, [selectedYear, currencies, request]);
-
   const getConversionRate = (currency) => {
     if (currency === 'CAD') return 1;
     const curr = currencies.find(c => c.code === currency);
     return curr?.conversionRate || 1;
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', `/api/gacosts?year=${selectedYear}&pageSize=1000`);
@@ -93,7 +86,13 @@ export default function GACostsDashboardSection({ selectedYear }) {
     } catch (err) {
       setError('Failed to load G&A dashboard');
     }
-  };
+  }, [selectedYear, currencies, request]);
+
+  useEffect(() => {
+    if (currencies.length > 0) {
+      fetchData();
+    }
+  }, [selectedYear, currencies, fetchData]);
 
   if (loading && !data) return <LoadingSpinner message="Loading dashboard..." />;
 

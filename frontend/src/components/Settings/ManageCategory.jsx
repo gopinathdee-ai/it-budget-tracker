@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -15,11 +15,7 @@ export default function ManageCategory() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, id: null });
   const { request, loading } = useApi();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', '/api/categories');
@@ -27,7 +23,11 @@ export default function ManageCategory() {
     } catch (err) {
       setError('Failed to load categories');
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const handleAddCategory = async (e) => {
     e.preventDefault();

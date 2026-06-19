@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useTheme } from '../../hooks/useTheme';
-import { THEMES } from '../../utils/themes';
 import ManageGeneral from '../../components/Settings/ManageGeneral';
 import ManageTheme from '../../components/Settings/ManageTheme';
 import ManageCategory from '../../components/Settings/ManageCategory';

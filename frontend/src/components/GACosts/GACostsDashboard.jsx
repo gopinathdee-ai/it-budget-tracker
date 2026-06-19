@@ -1,13 +1,11 @@
-import { useState, useEffect, useContext } from 'react';
-import { FaBriefcase, FaCheck, FaArrowUp, FaArrowDown, FaChartBar, FaSync } from 'react-icons/fa';
+import { useState, useEffect, useContext, useCallback } from 'react';
+import { FaBriefcase, FaCheck, FaArrowUp, FaArrowDown, FaChartBar } from 'react-icons/fa';
 import { ThemeContext } from '../../contexts/ThemeContext.js';
 import { useApi } from '../../hooks/useApi.js';
 import { formatCurrency, formatPercent } from '../../utils/formatters.js';
 import LoadingSpinner from '../common/LoadingSpinner.jsx';
 import ErrorMessage from '../common/ErrorMessage.jsx';
 import Number from '../common/Number.jsx';
-
-const YEARS = [2024, 2025, 2026, 2027];
 
 export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
   const [summary, setSummary] = useState(null);
@@ -30,19 +28,13 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
     fetchCurrencies();
   }, [request]);
 
-  useEffect(() => {
-    if (currencies.length > 0) {
-      fetchData();
-    }
-  }, [selectedYear, refreshTrigger, request, currencies]);
-
   const getConversionRate = (currency) => {
     if (currency === 'CAD') return 1;
     const curr = currencies.find(c => c.code === currency);
     return curr?.conversionRate || 1;
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', `/api/gacosts?year=${selectedYear}&pageSize=1000`);
@@ -80,7 +72,13 @@ export default function GACostsDashboard({ selectedYear, refreshTrigger }) {
     } catch (err) {
       setError('Failed to load G&A costs summary');
     }
-  };
+  }, [selectedYear, request, currencies]);
+
+  useEffect(() => {
+    if (currencies.length > 0) {
+      fetchData();
+    }
+  }, [selectedYear, refreshTrigger, currencies, fetchData]);
 
   if (loading) return <LoadingSpinner message="Loading summary..." />;
 

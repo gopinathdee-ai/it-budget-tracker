@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -17,17 +17,7 @@ export default function ManageSubCategory() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, id: null });
   const { request, loading } = useApi();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      fetchSubcategories(selectedCategory);
-    }
-  }, [selectedCategory]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', '/api/categories');
@@ -39,9 +29,9 @@ export default function ManageSubCategory() {
     } catch (err) {
       setError('Failed to load categories');
     }
-  };
+  }, [request, selectedCategory]);
 
-  const fetchSubcategories = async (categoryId) => {
+  const fetchSubcategories = useCallback(async (categoryId) => {
     try {
       setError(null);
       const response = await request('GET', `/api/categories/${categoryId}/subcategories`);
@@ -49,7 +39,17 @@ export default function ManageSubCategory() {
     } catch (err) {
       setError('Failed to load subcategories');
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchSubcategories(selectedCategory);
+    }
+  }, [selectedCategory, fetchSubcategories]);
 
   const handleAddSubCategory = async (e) => {
     e.preventDefault();

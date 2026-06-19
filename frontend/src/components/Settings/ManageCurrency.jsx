@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { useApi } from '../../hooks/useApi';
 import { AVAILABLE_CURRENCIES } from '../../utils/currencyList';
@@ -15,11 +15,7 @@ export default function ManageCurrency() {
   const [success, setSuccess] = useState(null);
   const { request, loading } = useApi();
 
-  useEffect(() => {
-    fetchCurrencies();
-  }, []);
-
-  const fetchCurrencies = async () => {
+  const fetchCurrencies = useCallback(async () => {
     try {
       setError(null);
       const response = await request('GET', '/api/config/currencies');
@@ -27,7 +23,11 @@ export default function ManageCurrency() {
     } catch (err) {
       setError('Failed to load currencies');
     }
-  };
+  }, [request]);
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, [fetchCurrencies]);
 
   const handleAddCurrency = async (e) => {
     e.preventDefault();
