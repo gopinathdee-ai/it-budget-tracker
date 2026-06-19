@@ -19,8 +19,7 @@ export const up = async function(knex) {
 
 export const down = async function(knex) {
   return knex.schema.table('GACosts', (table) => {
-    table.dropForeign('subCategoryId');
-    table.dropIndex('subCategoryId');
+    table.dropForeign(['subCategoryId']);
     table.dropColumn('subCategoryId');
   });
 };
